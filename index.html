@@ -1,0 +1,1944 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+
+
+	<script>
+	// if ('serviceWorker' in navigator) {
+	// 	navigator.serviceWorker.register('/sw.js')
+	// 	.then(function () {
+	// 		console.log('service worker registered');
+	// 	})
+	// 	.catch(function () {
+	// 		console.warn('service worker failed');
+	// 	});
+	// }
+
+
+
+	</script>
+	<script src=".\docxjs\node_modules\docx\build\index.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
+
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- <link rel="manifest" href="/manifest.json"> -->
+	<link rel="icon" sizes="192x192" href="icon192x192.png">
+	<title>
+		Prancheta
+	</title>
+
+
+	<style>
+    @font-face {
+      font-family: 'Spranq eco sans';
+      src: url(spranq_eco_sans_regular.ttf) format('truetype');
+			font-weight: normal;
+			font-style: normal;
+		}
+
+
+		body {
+			background-color: lightblue;
+			font-family: 'Verdana';
+			font-weight: bold;
+		}
+		input[type=text] {
+			width: 100%;
+			padding: 5px 20px;
+			margin: 5px 0;
+			box-sizing: border-box;
+			border: 2px solid blue;
+			border-radius: 4px;
+		}
+
+		textarea {
+			width: 100%;
+			padding: 5px 20px;
+			margin: 5px 0;
+			box-sizing: border-box;
+			border: 2px solid blue;
+			border-radius: 4px;
+		}
+		fieldset {
+
+			width: 100%;
+			padding: 8px 10px;
+			margin: 5px 0;
+			box-sizing: border-box;
+			border: 2px solid black;
+			border-radius: 4px;
+		}
+
+
+	</style>
+
+</head>
+<body>
+	<script>
+		window.onload = function(e){
+			document.getElementById('fieldsetPM1').style.display = "none";
+			document.getElementById('fieldsetPM2').style.display = "none";
+			document.getElementById('fieldsetPC1').style.display = "none";
+			document.getElementById('fieldsetPC2').style.display = "none";
+			document.getElementById('fieldsetGM1').style.display = "none";
+			document.getElementById('fieldsetGM2').style.display = "none";
+
+
+			var indFTV = document.getElementsByName("tFlagTodosVestigios");
+			for (var i = 0; i < indFTV.length; i++){
+				var stFieldVestigio = "fieldVestigio"+(i+1);
+				document.getElementById(stFieldVestigio).style.display = "none";
+
+				document.getElementById(stFieldVestigio+'Escalada').style.display = "none";
+				document.getElementById(stFieldVestigio+'Arrombamento').style.display = "none";
+				document.getElementById(stFieldVestigio+'Desordem').style.display = "none";
+				document.getElementById(stFieldVestigio+'Situado').style.display = "none";
+				document.getElementById(stFieldVestigio+'Extras').style.display = "none";
+			}
+		}
+
+	</script>
+	<form method="" id="fPrancheta" action="mailto:leo.age@gmail.com">
+		<fieldset id="fieldCola">
+			<legend>Inserir EMAIL</legend>
+			<p> Selecione e Copie todo o conteúdo do e-mail, cole na caixa de texto abaixo.</p>
+
+			<label for="cCampodeColagem">Campo de Colagem:</label>
+			<input type="text" name="tCampodeColagem" id="cCampodeColagem" size="30" maxlenght="1000" onpaste="fProcessaEmail()" placeholder="Cole o email aqui" />
+
+			<script>
+				function handlePaste(e) {
+					var clipboardData, pastedData;
+
+					// Stop data actually being pasted into div
+					e.stopPropagation();
+					e.preventDefault();
+
+					// Get pasted data via clipboard API
+					clipboardData = e.clipboardData || window.clipboardData;
+					pastedData = clipboardData.getData('Text');
+
+					// Do whatever with pasteddata
+					document.getElementById('cCampodeColagem').value = pastedData;
+					fProcessaEmail();
+				}
+
+				document.getElementById('cCampodeColagem').addEventListener('paste', handlePaste);
+
+				function fProcessaEmail(){
+					var conteudoEmail = document.getElementById('cCampodeColagem').value;
+					document.getElementById('cCampodeColagem').value = "";
+					document.getElementById('cCampodeColagem').placeholder= "OK";
+
+					console.log(conteudoEmail);
+
+					var posProtSAEP = conteudoEmail.search   ("Laudo Pericial nº:");
+					var posProtSAEPret = conteudoEmail.search("Protocolo:");
+
+					posProtSAEP = (posProtSAEPret!=-1 ? posProtSAEPret-8 : posProtSAEP);
+
+					var posOrigem = conteudoEmail.search("Origem:");
+					var posMSG = conteudoEmail.search("MSG n°:");
+					var posAutoridade = conteudoEmail.search("Autoridade Requisitante:");
+					var posEmailReq = conteudoEmail.search("Email Requisitante:");
+					var posNaturezaInformada = conteudoEmail.search("Natureza da Ocorrência:");
+					var posFlagrante = conteudoEmail.search("Flagrante:");
+					var posDataFatoInfo = conteudoEmail.search("Data Fato:");
+					var posLocalFatoInfo = conteudoEmail.search("Local do Fato:");
+					var posLocalExameInfo = conteudoEmail.search("Local do Exame:");
+					var posAcusado = conteudoEmail.search("Acusado");
+					var posVitimaInfo = conteudoEmail.search("Vitíma");
+					var posVitimaFatal = conteudoEmail.search("Vitíma Fatal:");
+					var posPreservaInfo = conteudoEmail.search("Preservado:");
+					var posPrioridade = conteudoEmail.search("Prioridade:");
+					var posObjetivoExame = conteudoEmail.search("Objetivo do Exame:");
+					var posHistoricoInfo = conteudoEmail.search("Histórico:");
+					var posVeiculoInfo = conteudoEmail.search("Veículo");
+
+
+					document.getElementById("cNomeVit").value = conteudoEmail.substring(posVitimaInfo+10,posVitimaFatal).trim();
+
+					if(conteudoEmail.substring(posPreservaInfo+11,posPrioridade).search(/sim/i) != -1){
+						document.getElementById("preservacaoInformada").innerHTML = document.getElementById("preservacaoInformada").innerHTML + "Usar Preservação Informada: " + conteudoEmail.substring(posPreservaInfo+11,posPrioridade).trim();
+						document.getElementById("usarPreserInformada").hidden = false;
+					}
+
+					var endFato = conteudoEmail.substring(posLocalFatoInfo+14,posLocalExameInfo);
+					var endExame = conteudoEmail.substring(posLocalExameInfo+15,posAcusado);
+
+					document.getElementById("taObjExam").value = conteudoEmail.substring(posObjetivoExame+19,posHistoricoInfo);
+					document.getElementById("taHist").value = conteudoEmail.substring(posHistoricoInfo+10,posVeiculoInfo).trim();
+
+					if (endExame == " 	"){
+						endExame = endFato;
+					}
+
+					document.getElementById('cProtSAEP').value = conteudoEmail.substring(posProtSAEP+19,posProtSAEP+30);
+
+					var vBoletimDelegacia = conteudoEmail.substring(posOrigem+8,posMSG);
+					document.getElementById('cBO').value = vBoletimDelegacia.substring(0,vBoletimDelegacia.search("2022")+4);
+					document.getElementById('cDelegacia').value = vBoletimDelegacia.substring(vBoletimDelegacia.search("2022")+6).trim();
+					document.getElementById('cAutoridade').value = conteudoEmail.substring(posAutoridade+24,posEmailReq).trim();
+
+					document.getElementById('cNatInfo').innerHTML = "Natureza Informada: "+conteudoEmail.substring(posNaturezaInformada+24,posFlagrante);
+
+					if ((conteudoEmail.search("furto") != -1) ||(conteudoEmail.search("Furto") != -1)||(conteudoEmail.search("FURTO") != -1)){
+						document.getElementById('cNatuFurt').checked = true;
+					}
+
+					var vDatinha = conteudoEmail.substring(posDataFatoInfo+11,posDataFatoInfo+21)
+					var montaDataFato = vDatinha.substring(6,10)+"-"+vDatinha.substring(3,5)+"-"+vDatinha.substring(0,2);
+
+					document.getElementById('cDataFatos').value = montaDataFato;
+					document.getElementById('cHoraFatos').value = conteudoEmail.substring(posDataFatoInfo+22,posDataFatoInfo+27);
+
+					document.getElementById('cRua').value = endExame.trim();
+
+					var probCidade =  conteudoEmail.substring(posOrigem+8,posMSG);
+
+					//nomes possíveis para Americana
+					var nomePossivelAmericana = ["Americana", "AMERICANA", "Americana"];
+					for(var i=0; i < nomePossivelAmericana.length; i++){
+						if (probCidade.search(nomePossivelAmericana[i]) != -1){
+							document.getElementById('cAmericana').checked = true;
+						}
+					}
+
+					//nomes possíveis para Artur Nogueira
+					var nomePossivelArturNogueira = ["Nogueira", "NOGUEIRA", "nogueira"];
+					for(var i=0; i < nomePossivelArturNogueira.length; i++){
+						if (probCidade.search(nomePossivelArturNogueira[i]) != -1){
+							document.getElementById('cArturNogueira').checked = true;
+						}
+					}
+
+					//nomes possíveis para Cosmópolis
+					var nomePossivelCosmopolis = ["Cosmópolis", "Cosmopolis", "cosmópolis","cosmopolis", "COSMÓPOLIS", "COSMOPOLIS"];
+					for(var i=0; i < nomePossivelCosmopolis.length; i++){
+						if (probCidade.search(nomePossivelCosmopolis[i]) != -1){
+							document.getElementById('cCosmopolis').checked = true;
+						}
+					}
+
+					//nomes possíveis para Engenheiro Coelho
+					var nomePossivelEngCoelho = ["Coelho", "COELHO", "coelho"];
+					for(var i=0; i < nomePossivelEngCoelho.length; i++){
+						if (probCidade.search(nomePossivelEngCoelho[i]) != -1){
+							document.getElementById('cEngenheiroCoelho').checked = true;
+						}
+					}
+					//nomes possíveis para Hortolândia
+					var nomePossivelHortolandia = ["Hortolândia", "HORTOLÂNDIA", "hortolândia","Hortolandia", "HORTOLANDIA", "hortolandia"];
+					for(var i=0; i < nomePossivelHortolandia.length; i++){
+						if (probCidade.search(nomePossivelHortolandia[i]) != -1){
+							document.getElementById('cHortolandia').checked = true;
+						}
+					}
+
+
+					//nomes possíveis para Nova Odessa
+					var nomePossivelNovaOdessa = ["odessa", "Odessa", "ODESSA"];
+					for(var i=0; i < nomePossivelNovaOdessa.length; i++){
+						if (probCidade.search(nomePossivelNovaOdessa[i]) != -1){
+							document.getElementById('cNovaOdessa').checked = true;
+						}
+					}
+
+					//nomes possíveis para Monte Mor
+					var nomePossivelMonteMor = ["Monte", "MONTE", "monte"];
+					for(var i=0; i < nomePossivelMonteMor.length; i++){
+						if (probCidade.search(nomePossivelMonteMor[i]) != -1){
+							document.getElementById('cMonteMor').checked = true;
+						}
+					}
+
+					//nomes possíveis para Santa Bárbara d'Oeste
+					var nomePossivelSBO = ["Bárbara", "BÁRBARA", "bárbara", "BARBARA", "Barbara", "barbara", "BARB", "Barb", "barb","BáRB", "Bárb", "bárb", "SBO"];
+					for(var i=0; i < nomePossivelSBO.length; i++){
+						if (probCidade.search(nomePossivelSBO[i]) != -1){
+							document.getElementById('cSantaBarb').checked = true;
+						}
+					}
+
+					//nomes possíveis para Sumare
+					var nomePossivelSumare = ["Sumaré", "sumaré", "SUMARÉ", "Sumare", "Sumare", "SUMARÉ"];
+					for(var i=0; i < nomePossivelSumare.length; i++){
+						if (probCidade.search(nomePossivelSumare[i]) != -1){
+							document.getElementById('cSumare').checked = true;
+						}
+					}
+
+					revela();
+				}
+			</script>
+
+		</fieldset>
+
+		<fieldset id="fieldDados">
+			<legend>Dados</legend>
+			<label for="cPerito">Perito:</label>
+			<input type="text" name="tPerito" id="cPerito" size="50" maxlenght="50" value="Leonardo Reis da Silva" placeholder="Perito" /> </br>
+
+			<label for="cProtocolo">Protocolo:</label>
+			<input type="text" name="tProtocolo" id="cProtocolo" size="9" maxlenght="9" placeholder="L00000-22" /> </br>
+
+			<label for="cProtSAEP">Protocolo SAEP:</label>
+			<input type="text" name="tProtSAEP" id="cProtSAEP" size="9" maxlenght="9" placeholder="0000000/22" /> </br>
+
+			<label for="cREP">REP:</label>
+			<input type="text" name="tREP" id="cREP" size="9" maxlenght="9" placeholder="000000/22" /> </br>
+
+			<label for="cBO">Origem:</label>
+			<input type="text" name="tBO" id="cBO" size="40" maxlenght="40" placeholder="Boletim" /> </br>
+
+			<label for="cDelegacia">Delegacia:</label>
+			<input type="text" name="tDelegacia" id="cDelegacia" size="40" maxlenght="40" placeholder="Delegacia" /> </br>
+
+			<label for="cAutoridade">Autoridade:</label>
+			<input type="text" name="tAutoridade" id="cAutoridade" size="40" maxlenght="40" placeholder="Autoridade" /> </br>
+
+		</fieldset>
+
+		<fieldset id="fieldNatureza" onclick="revela()">
+			<legend>Natureza:</legend>
+			<p id="cNatInfo"> Natureza Informada: </p>
+			<label><input type="checkbox" name="tNatureza" id="cNatuFurt" value="Furto" /> Furto </label></br>
+			<label><input type="checkbox" name="tNatureza" id="cNatuJogo" value="Jogo de Azar"/> Jogo de Azar </label></br>
+			<!-- <label><input type="checkbox" name="tNatureza" id="cNatuDano" value="Dano"/> Dano </label></br> -->
+			<!-- <label><input type="checkbox" name="tNatureza" id="cNatuACdT" value="Acidente de Trânsito"/> Acidente de Trânsito </label></br> -->
+			<!-- <label><input type="checkbox" name="tNatureza" id="cNatuOutr" value="Outros"/> Outros </label></br> -->
+
+			<script>
+			function revela(){
+
+				var indFTV = document.getElementsByName("tFlagTodosVestigios");
+
+				for (var i = 0; i < indFTV.length; i++){
+					var stLabelVest = "cLabelVest"+(i+1);
+					var stFlagVest = "cFlagVest"+(i+1);
+					var stFieldVestigio = "fieldVestigio"+(i+1);
+
+					document.getElementById(stLabelVest).hidden = !document.getElementById('cNatuFurt').checked;
+
+					if(!document.getElementById('cNatuFurt').checked){
+						document.getElementById(stFlagVest).checked = document.getElementById('cNatuFurt').checked;
+					}
+
+					dEsconde(stFlagVest,stFieldVestigio);
+				}
+			}
+			</script>
+
+		</fieldset>
+
+		<fieldset id="fieldObjetivoDoExame" disabled="true">
+				<legend><label><input type="checkbox" name="tObjetivoDoExame" id="cObjetivoDoExame"
+				onclick="document.getElementById('fieldObjetivoDoExame').disabled = !document.getElementById('cObjetivoDoExame').checked"/>
+				Objetivo do Exame</label></legend>
+					<textarea id="taObjExam" name="ctaObjExam" rows="4" cols="50">Levantamento de Local.</textarea>
+		</fieldset>
+		<fieldset id="fieldHistorico" disabled="true">
+				<legend><label><input type="checkbox" name="tHistorico" id="cHistorico"
+				onclick="document.getElementById('fieldHistorico').disabled = !document.getElementById('cHistorico').checked"/>
+				Histórico</label></legend>
+					<textarea id="taHist" name="ctaHist" rows="4" cols="50">Histórico.</textarea>
+		</fieldset>
+
+		<fieldset id="fieldPreliminares">
+			<legend>Preliminares:</legend>
+			<p id="pDataFatos">
+				<label for="cDataFatos">Data dos Fatos:</label>
+				<input type="date" name="tDataFatos" id="cDataFatos"/></br>
+
+				<label for="cHoraFatos">Hora dos Fatos:</label>
+				<input type="time" name="tHoraFatos" id="cHoraFatos"/>
+			</p>
+			<p id="pDataExames">
+				<label for="cDataExame">Data do Exame:</label>
+				<input type="date" name="tDataExame" id="cDataExame"/></br>
+				<label for="cHoraExame">Hora do Exame:</label>
+				<input type="time" name="tHoraExame" id="cHoraExame"/></br>
+
+				<button type="button" onclick="transfereData()"/>HORA ATUAL</button>
+
+				<script>
+					function transfereData() {
+						var currentDate= new Date();
+						var day = ("0" + currentDate.getDate()).slice(-2);
+						var month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+						var today = currentDate.getFullYear()+"-"+(month)+"-"+(day) ;
+						document.getElementById('cDataExame').value = today;
+						var hour = ("0" + currentDate.getHours()).slice(-2);
+						var minute = ("0" + currentDate.getMinutes()).slice(-2);
+						document.getElementById('cHoraExame').value = hour + ":" + minute;
+					}
+				</script>
+			</p>
+			<p>
+				<label for="cRua">Logradouro:</label>
+				<input type="text" name="tRua" id="cRua" size="50" maxlenght="100" placeholder="Rua" />
+			</p>
+			<p>
+				<label><input type="radio" name="tCidade" value="Americana" id="cAmericana" checked/>Americana</label></br>
+				<label><input type="radio" name="tCidade" value="Santa Bárbara d'Oeste" id="cSantaBarb" />Santa Bárbara d'Oeste</label></br>
+				<label><input type="radio" name="tCidade" value="Nova Odessa" id="cNovaOdessa" />Nova Odessa</label></br>
+				<label><input type="radio" name="tCidade" value="Sumaré" id="cSumare"/>Sumaré</label></br>
+				<label><input type="radio" name="tCidade" value="Hortolândia" id="cHortolandia" />Hortolândia</label></br>
+				<label><input type="radio" name="tCidade" value="Monte Mor" id="cMonteMor" />Monte Mor</label></br>
+				<label><input type="radio" name="tCidade" value="Artur Nogueira" id="cArturNogueira" />Artur Nogueira</label></br>
+				<label><input type="radio" name="tCidade" value="Cosmópolis" id="cCosmopolis" />Cosmópolis</label></br>
+				<label><input type="radio" name="tCidade" value="Engenheiro Coelho" id="cEngenheiroCoelho" />Engenheiro Coelho</label>
+			</p>
+
+			<p>
+
+				<label id="cLatitute">Latitude:</label>
+				<label id="cLongitude">; Longitude:</label></br>
+				<button type="button" onclick="getLocation()">PEGAR GEOLOCALIZAÇÃO</button>
+
+				<script>
+					var Lat = document.getElementById("cLatitute");
+					var Long = document.getElementById("cLongitude");
+
+					function getLocation() {
+						if (navigator.geolocation) {
+							navigator.geolocation.getCurrentPosition(showPosition);
+						} else {
+							Lat.innerHTML = "Geolocation is not supported by this browser.";
+						}
+					}
+					function showPosition(position) {
+						Lat.innerHTML = "Latitude: " + position.coords.latitude;
+						Long.innerHTML = "; Longitude: " + position.coords.longitude;
+					}
+
+					function dEsconde(cFlag,field){
+						if (document.getElementById(cFlag).checked){
+							document.getElementById(field).style.display = "";
+						}else{
+							document.getElementById(field).style.display = "none";
+						}
+					}
+
+				</script>
+			</p>
+			<p id="preservacaoInformada"><input type="checkbox" name="tUsarPreserInformada" id="usarPreserInformada" hidden="true" /></p>
+
+			<p><label><input type="checkbox" name="tFlagPM1" id="cFlagPM1"
+				onclick="dEsconde('cFlagPM1','fieldsetPM1')"/>
+				Policial Militar 1:</label></p>
+			<fieldset id="fieldsetPM1">
+				<label>Nome:<input type="text" name="tNomePM1" id="cNomePM1" size="15" maxlength="20" placeholder="Nome"/></label>
+				<label>RE:<input type="text" name="tREPM1" id="cREPM1" size="10" maxlength="15" placeholder="RE"/></label>
+				<label>VTR:<input type="text" name="tVTRPM" id="cVTRPM" size="8" maxlength="15" placeholder="VTR"/></label>
+			</fieldset>
+
+			<!--POLICIAL MILITAR 2-->
+			<p><label><input type="checkbox" name="tFlagPM2" id="cFlagPM2"
+				onclick="dEsconde('cFlagPM2','fieldsetPM2')"/>
+				Policial Militar 2:</label></p>
+			<fieldset id="fieldsetPM2">
+				<label>Nome:<input type="text" name="tNomePM2" id="cNomePM2" size="15" maxlength="20" placeholder="Nome"/></label>
+				<label>RE:<input type="text" name="tREPM2" id="cREPM2" size="10" maxlength="15" placeholder="RE"/></label>
+			</fieldset>
+
+			<!--POLICIAL CIVIL 1-->
+			<p><label><input type="checkbox" name="tFlagPC1" id="cFlagPC1"
+				onclick="dEsconde('cFlagPC1','fieldsetPC1')"/>
+				Policial Civil 1:</label></p>
+			<fieldset id="fieldsetPC1">
+				<label>Nome:<input type="text" name="tNomePC1" id="cNomePC1" size="15" maxlength="20" placeholder="Nome"/></label>
+				<label>RG:<input type="text" name="tRGPC1" id="cRGPC1" size="10" maxlength="15" placeholder="RG"/></label>
+				<label>VTR:<input type="text" name="tVTRPC" id="cVTRPC" size="8" maxlength="15" placeholder="VTR"/></label>
+			</fieldset>
+
+			<!--POLICIAL CIVIL 2-->
+			<p><label><input type="checkbox" name="tFlagPC2" id="cFlagPC2"
+				onclick="dEsconde('cFlagPC2','fieldsetPC2')"/>
+				Policial Civil 2:</label></p>
+			<fieldset id="fieldsetPC2">
+				<label>Nome:<input type="text" name="tNomePC2" id="cNomePC2" size="15" maxlength="20" placeholder="Nome"/></label>
+				<label>RG:<input type="text" name="tRGPC2" id="cRGPC2" size="10" maxlength="15" placeholder="RG"/></label>
+			</fieldset>
+
+			<!-- GUARDA MUNICIPAL 1-->
+			<p><label><input type="checkbox" name="tFlagGM1" id="cFlagGM1"
+				onclick="dEsconde('cFlagGM1','fieldsetGM1')"/>
+				Guarda Municipal 1:</label></p>
+			<fieldset id="fieldsetGM1">
+				<label>Nome:<input type="text" name="tNomeGM1" id="cNomeGM1" size="15" maxlength="20" placeholder="Nome"/></label>
+				<label>RG:<input type="text" name="tRGGM1" id="cRGGM1" size="10" maxlength="15" placeholder="RG"/></label>
+				<label>VTR:<input type="text" name="tVTRGM" id="cVTRGM" size="8" maxlength="15" placeholder="VTR"/></label>
+			</fieldset>
+
+			<!-- GUARDA MUNICIPAL 2-->
+			<p><label><input type="checkbox" name="tFlagGM2" id="cFlagGM2"
+				onclick="dEsconde('cFlagGM2','fieldsetGM2')"/>
+				Guarda Municipal 2:</label></p>
+			<fieldset id="fieldsetGM2">
+				<label>Nome:<input type="text" name="tNomeGM2" id="cNomeGM2" size="15" maxlength="20" placeholder="Nome"/></label>
+				<label>RG:<input type="text" name="tRGGM2" id="cRGGM2" size="10" maxlength="15" placeholder="RG"/></label>
+			</fieldset>
+
+			<fieldset id="fieldsetVitima" disabled="true">
+				<legend><label><input type="checkbox" name="tFlagVitima" id="cFlagVitima"
+				onclick="document.getElementById('fieldsetVitima').disabled = !document.getElementById('cFlagVitima').checked"/>
+				Vítima/Representante:</label></legend>
+				<label>Nome:<input type="text" name="tNomeVit" id="cNomeVit" size="32" maxlength="32" placeholder="Nome"/></label>
+				<label>RG:<input type="text" name="tRGVit" id="cRGVit" size="12" maxlength="15" placeholder="RG"/></label>
+			</fieldset>
+		</fieldset>
+		<fieldset id="Local">
+			<legend>Local:</legend>
+			<fieldset>
+				<legend>Tipo:</legend>
+				<input type="radio" value="residencial" name="tZoneamento" id="cResidencia" checked/>
+				<label for="cResidencia">Residência</label>
+				<input type="radio" value="comercial" name="tZoneamento" id="cComercial"/>
+				<label for="cComercial">Comercial</label>
+				<input type="radio" value="Repartição Pública" name="tZoneamento" id="cReparticao"/>
+				<label for="cReparticao">Repartição</label>
+				<input type="radio" value="industrial" name="tZoneamento" id="cIndustrial"/>
+				<label for="cIndustrial">Industrial</label>
+				<input type="radio" value="rural" name="tZoneamento" id="cRural"/>
+				<label for="cRural">Rural</label>
+				<input type="radio" value="terreno" name="tZoneamento" id="cTerreno"/>
+				<label for="cTerreno">Terreno</label>
+				<input type="radio" value="via pública" name="tZoneamento" id="cViaPublica"/>
+				<label for="cViaPublica">Via Pública</label>
+				<!-- outro -->
+			</fieldset>
+			<fieldset>
+				<legend>Construção em:</legend>
+				<input type="radio" name="tMaterial" value="alvenaria" id="cAlvenaria" checked/> <label for="cAlvenaria">em alvenaria</label>
+				<input type="radio" name="tMaterial" value="madeira" id="cMadeira"/> <label for="cMadeira">em madeira</label>
+				<input type="radio" name="tMaterial" value="metal" id="cMetal"/> <label for="cMetal">em metal</label>
+				<!-- outro -->
+			</fieldset>
+			<fieldset>
+				<legend>Vizinhos:</legend>
+				<input type="radio" name="tViz" value="unido" id="cUni" checked/> <label for="cUni">unido</label>
+				<input type="radio" name="tViz" value="isolado" id="cIso"/> <label for="cIso">isolado</label>
+				<input type="radio" name="tViz" value="geminado" id="cGem"/> <label for="cGem">geminado</label>
+			</fieldset>
+			<fieldset>
+				<legend>Vizinho lados:</legend>
+				<input type="radio" name="tLado" value="em ambos os lados" id="cAmbos" checked/> <label for="cAmbos">ambos os lados</label>
+				<input type="radio" name="tLado" value="à esquerda (referencial de quem adentra o imóvel)" id="cEsq"/> <label for="cEsq">esquerdo</label>
+				<input type="radio" name="tLado" value="à direita (referencial de quem adentra o imóvel)" id="cDir"/> <label for="cDir">direito</label>
+			</fieldset>
+			<fieldset>
+				<legend>Alinhamento:</legend>
+				<input type="radio" name="tAlin" value="alinhado" id="cAlinhado" checked/> <label for="cAlinhado">alinhado</label>
+				<input type="radio" name="tAlin" value="recuado" id="cRecuado"/> <label for="cRecuado">recuado</label>
+			</fieldset>
+			<fieldset>
+				<legend>Nível:</legend>
+				<input type="radio" name="tNiv" value="ao nível" id="cAoNi" checked/> <label for="cAoNi">ao nível</label>
+				<input type="radio" name="tNiv" value="abaixo do nível" id="cAbaixoNi"/> <label for="cAbaixoNi">abaixo do nível</label>
+				<input type="radio" name="tNiv" value="acima do nível" id="cAcimaNi"/> <label for="cAcimaNi">acima do nível</label>
+			</fieldset>
+			<fieldset>
+				<legend>Vedação:</legend>
+				<input type="radio" name="tVedacao" value=" por muro de alvenaria" id="cMuroAlvenaria" checked/> <label for="cMuroAlvenaria">muro de alvenaria</label>
+				<input type="radio" name="tVedacao" value=" por gradeamento metálico" id="cGradeamento"/> <label for="cGradeamento">gradeamento metálico</label>
+				<input type="radio" name="tVedacao" value=" cerca de arame farpado" id="cCerca"/> <label for="cCerca">cerca de arame</label>
+				<input type="radio" name="tVedacao" value="" id="cVedacaoAusente"/> <label for="cVedacaoAusente">Sem vedação</label>
+				<p>
+					<label for="cAlt">Altura:</label>
+					<input type="range" min="0" max="7" step="0.1" oninput="funcaoSlideTexto(this)" value="1.8" class="slider" id="slidAltura"/>
+					<input type="number" id="textAltura" value="" size="4" maxlength="4" onchange="setSlider(this)"/> metros
+					<script>
+						var slider = document.getElementById("slidAltura");
+						var output = document.getElementById("textAltura");
+						slider.value = "1.8";
+						output.value = slider.value;
+						slider.oninput = function() {
+							output.value = this.value;
+						}
+						output.addEventListener("change", function() {
+							slider.value = this.value;
+						});
+						function setSlider(){
+							slider.value = output.value;
+						}
+					</script>
+				</p>
+				<input type="checkbox" name="tCercaEletrica" id="cCercaEletrica" /><label for="cCercaEletrica">cerca elétrica</label>
+				<input type="checkbox" name="tOfend" id="cOfend" /><label for="cOfend">ofendículos</label>
+			</fieldset>
+			<fieldset>
+				<legend>Porta/Portão Principal:</legend>
+				<input type="radio" value="basculante" name="tAcesso" id="cBasc" checked/> 				<label for="cBasc">basculante</label>
+				<input type="radio" value="de deslizamento lateral" name="tAcesso" id="cDesl"/> 		<label for="cDesl">deslizamento lateral</label>
+				<input type="radio" value="metálico de folha dupla" name="tAcesso" id="cMet2"/> 		<label for="cMet2">metálico folha dupla</label>
+				<input type="radio" value="metálico de folha simples" name="tAcesso" id="cMet1"/> 		<label for="cMet1">metálico folha simples</label>
+				<input type="radio" value="em madeira de folha dupla" name="tAcesso" id="cMad2"/> 		<label for="cMad2">madeira folha dupla</label>
+				<input type="radio" value="em madeira de folha simples" name="tAcesso" id="cMad1"/> 	<label for="cMad1">madeira folha simples</label> </br>
+				<input type="checkbox" name="tAcessoFechadura" id="cAcessoFechadura" checked/>			<label for="cAcessoFechadura">fechadura "Yale"</label>
+				<input type="checkbox" name="tAcessoEletronico" id="cAcessoEletronico" />				<label for="cAcessoEletronico">acionamento eletrônico</label>
+				<input type="checkbox" name="tAcessoPortaria" id="cAcessoPortaria" />					<label for="cAcessoPortaria">portaria</label>
+				<input type="checkbox" name="tPortaoSocial" id="cPortaoSocial" checked/>				<label for="cPortaoSocial">portão social</label>
+
+			</fieldset>
+		</fieldset>
+
+			<p><label id="cLabelVest1" hidden="true"><input type="checkbox" name="tFlagTodosVestigios"  id="cFlagVest1"
+				onclick="dEsconde('cFlagVest1','fieldVestigio1')"/>
+				Vestígio de Furto 1</label></p>
+
+			<fieldset id="fieldVestigio1">
+
+				<label><input type="checkbox" name="tFlagVest1DuasPessoas" id="cFlagVest1DuasPessoas"/>ensejando o concurso de mais de uma pessoa</label>
+				<label><input type="checkbox" name="tFlagVest1Recente" id="cFlagVest1Recente"/>recente</label>
+				<label><input type="checkbox" name="tFlagVest1PontoEntrada" id="cFlagVest1PontoEntrada"/>ponto de entrada</label>
+
+				<p><label><input type="checkbox" name="tFlagVest1Escalada" id="cFlagVest1Escalada"
+					onclick="dEsconde('cFlagVest1Escalada','fieldVestigio1Escalada')"/>
+					Escalada</label></p>
+				<fieldset id="fieldVestigio1Escalada">
+					<label><input type="checkbox" name="tFlagVest1EscaladaSemVestigio" id="cFlagVest1EscaladaSemVestigio"/>sem vestígios, modo provável</label>
+
+					<fieldset id="fieldVestigio1EscaladaSujidade" disabled="true">
+						<legend><label><input type="checkbox" name="tFlagVest1EscaladaSujidade" id="cFlagVest1EscaladaSujidade"
+						onclick="document.getElementById('fieldVestigio1EscaladaSujidade').disabled = !document.getElementById('cFlagVest1EscaladaSujidade').checked"/>
+						Sujidades</label></legend>
+						<label><input type="checkbox" name="tFlagVest1EscaladaSujidadeCalcado" id="cFlagVest1EscaladaSujidadeCalcado"/>calçado</label>
+						<label><input type="checkbox" name="tFlagVest1EscaladaSujidadePes" id="cFlagVest1EscaladaSujidadePes"/>pés</label>
+						<label><input type="checkbox" name="tFlagVest1EscaladaSujidadeMao" id="cFlagVest1EscaladaSujidadeMao"/>mãos</label>
+						<label><input type="checkbox" name="tFlagVest1EscaladaSujidadeTerra" id="cFlagVest1EscaladaSujidadeTerra"/>terra</label>
+					</fieldset>
+
+					<fieldset id="fieldVestigio1EscaladaFragmento" disabled="true">
+						<legend><label><input type="checkbox" name="tFlagVest1EscaladaFragmento" id="cFlagVest1EscaladaFragmento"
+						onclick="document.getElementById('fieldVestigio1EscaladaFragmento').disabled = !document.getElementById('cFlagVest1EscaladaFragmento').checked"/>
+						Fragmentos</label></legend>
+						<label><input type="checkbox" name="tFlagVest1EscaladaFragmentoCimento" id="cFlagVest1EscaladaFragmentoCimento"/>cimentícios</label>
+						<label><input type="checkbox" name="tFlagVest1EscaladaFragmentoCeramico" id="cFlagVest1EscaladaFragmentoCeramico"/>tijolo cerâmico</label>
+						<label><input type="checkbox" name="tFlagVest1EscaladaFragmentoVidro" id="cFlagVest1EscaladaFragmentoVidro"/>vidro</label>
+					</fieldset>
+				</fieldset>
+
+				<p><label><input type="checkbox" name="tFlagVest1Arrombamento" id="cFlagVest1Arrombamento"
+					onclick="dEsconde('cFlagVest1Arrombamento','fieldVestigio1Arrombamento')"/>
+					Arrombamento</label></p>
+
+				<fieldset id="fieldVestigio1Arrombamento">
+					<fieldset id="fieldVestigio1ArrombamentoAmolg" disabled="true">
+						<legend><label><input type="checkbox" name="tFlagVest1ArrombamentoAmolg" id="cFlagVest1ArrombamentoAmolg"
+						onclick="document.getElementById('fieldVestigio1ArrombamentoAmolg').disabled = !document.getElementById('cFlagVest1ArrombamentoAmolg').checked"/>
+						Amolgamento</label></legend>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoAmolgPorta" id="cFlagVest1ArrombamentoAmolgPorta"/>porta</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoAmolgJanela" id="cFlagVest1ArrombamentoAmolgJanela"/>janela</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoAmolgMetal" id="cFlagVest1ArrombamentoAmolgMetal"/>metal</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoAmolgMadeira" id="cFlagVest1ArrombamentoAmolgMadeira"/>madeira</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoAmolgInstIncerto" id="cFlagVest1ArrombamentoAmolgInstIncerto"/>instrumento incerto</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoAmolgInstAlav" id="cFlagVest1ArrombamentoAmolgInstAlav"/>instrumento na forma de alavanca</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoAmolgInstPerc" id="cFlagVest1ArrombamentoAmolgInstPerc"/>instrumento de ação percussiva</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoAmolgSemInst" id="cFlagVest1ArrombamentoAmolgSemInst"/>força humana</label>
+
+					</fieldset>
+
+					<fieldset id="fieldVestigio1ArrombamentoFraturas" disabled="true">
+						<legend><label><input type="checkbox" name="tFlagVest1ArrombamentoFraturas" id="cFlagVest1ArrombamentoFraturas"
+						onclick="document.getElementById('fieldVestigio1ArrombamentoFraturas').disabled = !document.getElementById('cFlagVest1ArrombamentoFraturas').checked"/>
+						Fraturas</label></legend>
+
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoFratPorta" id="cFlagVest1ArrombamentoFratPorta"/>porta</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoFratJanela" id="cFlagVest1ArrombamentoFratJanela"/>janela</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoFratMuro" id="cFlagVest1ArrombamentoFratMuro"/>muro</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoFratVidro" id="cFlagVest1ArrombamentoFratVidro"/>vidro/vridrilho</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoFratMadeira" id="cFlagVest1ArrombamentoFratMadeira"/>madeira</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoFratInstIncerto" id="cFlagVest1ArrombamentoFratInstIncerto"/>instrumento incerto</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoFratInstAlav" id="cFlagVest1ArrombamentoFratInstAlav"/>instrumento na forma de alavanca</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoFratInstPerc" id="cFlagVest1ArrombamentoFratInstPerc"/>instrumento de ação percussiva</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoFratSemIns" id="cFlagVest1ArrombamentoFratSemIns"/>força humana</label>
+
+					</fieldset>
+
+					<fieldset id="fieldVestigio1ArrombamentoFragmento" disabled="true">
+						<legend><label><input type="checkbox" name="tFlagVest1ArrombamentoFragmento" id="cFlagVest1ArrombamentoFragmento"
+						onclick="document.getElementById('fieldVestigio1ArrombamentoFragmento').disabled = !document.getElementById('cFlagVest1ArrombamentoFragmento').checked"/>
+						Fragmentos</label></legend>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoFragmentoCimento" id="cFlagVest1ArrombamentoFragmentoCimento"/>cimentícios</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoFragmentoCeramico" id="cFlagVest1ArrombamentoFragmentoCeramico"/>tijolo cerâmico</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoFragmentoVidro" id="cFlagVest1ArrombamentoFragmentoVidro"/>vidro</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoFragmentoMadeira" id="cFlagVest1ArrombamentoFragmentoMadeira"/>madeira</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoFragmentoMetal" id="cFlagVest1ArrombamentoFragmentoMetal"/>metal</label>
+					</fieldset>
+
+					<fieldset id="fieldVestigio1ArrombamentoAtritamentos" disabled="true">
+						<legend><label><input type="checkbox" name="tFlagVest1ArrombamentoAtritamentos" id="cFlagVest1ArrombamentoAtritamentos"
+						onclick="document.getElementById('fieldVestigio1ArrombamentoAtritamentos').disabled = !document.getElementById('cFlagVest1ArrombamentoAtritamentos').checked"/>
+						Atritamentos</label></legend>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoAtritamentosMixa" id="cFlagVest1ArrombamentoAtritamentosMixa"/>uso de chave mixa</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoAtritamentosInstr" id="cFlagVest1ArrombamentoAtritamentosInst"/>inserção de instrumento</label>
+					</fieldset>
+
+					<fieldset id="fieldVestigio1ArrombamentoRemocao" disabled="true">
+						<legend><label><input type="checkbox" name="tFlagVest1ArrombamentoRemocao" id="cFlagVest1ArrombamentoRemocao"
+						onclick="document.getElementById('fieldVestigio1ArrombamentoRemocao').disabled = !document.getElementById('cFlagVest1ArrombamentoRemocao').checked"/>
+						Remoção</label></legend>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoRemocaoTelhas" id="cFlagVest1ArrombamentoRemocaoTelhas"/>telhas</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoRemocaoForro" id="cFlagVest1ArrombamentoRemocaoForro"/>forro</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoRemocaoVidrilhos" id="cFlagVest1ArrombamentoRemocaoVidrilhos"/>vidrilhos</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoRemocaoFVidro" id="cFlagVest1ArrombamentoRemocaoFVidro"/>folha de vidro</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoRemocaoFPorta" id="cFlagVest1ArrombamentoRemocaoFPorta"/>folha de porta</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoRemocaoFJanela" id="cFlagVest1ArrombamentoRemocaoFJanela"/>folha de janela</label>
+						<label><input type="checkbox" name="tFlagVest1ArrombamentoRemocaoMVedacao" id="cFlagVest1ArrombamentoRemocaoMVedacao"/>moldura de vedação</label>
+					</fieldset>
+				</fieldset>
+
+				<p><label><input type="checkbox" name="tFlagVest1Desordem" id="cFlagVest1Desordem"
+					onclick="dEsconde('cFlagVest1Desordem','fieldVestigio1Desordem')"/>
+					Desordem Típica de Busca</label></p>
+
+				<fieldset id="fieldVestigio1Desordem">
+
+					<label><input type="checkbox" name="tFlagVest1DesordemQuartos" id="cFlagVest1DesordemQuartos"/>quartos</label>
+					<label><input type="checkbox" name="tFlagVest1DesordemQuarto" id="cFlagVest1DesordemQuarto"/>quarto</label>
+					<label><input type="checkbox" name="tFlagVest1DesordemCloset" id="cFlagVest1DesordemCloset"/>closet</label>
+					<label><input type="checkbox" name="tFlagVest1DesordemSala" id="cFlagVest1DesordemSala"/>sala</label>
+					<label><input type="checkbox" name="tFlagVest1DesordemCozinha" id="cFlagVest1DesordemCozinha"/>cozinha</label>
+					<label><input type="checkbox" name="tFlagVest1DesordemBanheiro" id="cFlagVest1DesordemBanheiro"/>banheiro</label>
+					<label><input type="checkbox" name="tFlagVest1DesordemGaragem" id="cFlagVest1DesordemGaragem"/>garagem</label>
+					<label><input type="checkbox" name="tFlagVest1DesordemLavanderia" id="cFlagVest1DesordemLavanderia"/>lavanderia</label>
+
+				</fieldset>
+
+				<p><label><input type="checkbox" name="tFlagVest1Situado" id="cFlagVest1Situado"
+					onclick="dEsconde('cFlagVest1Situado','fieldVestigio1Situado')"/>
+					Situado</label></p>
+
+				<fieldset id="fieldVestigio1Situado">
+					<label><input type="checkbox" name="tFlagVest1SituadoPAnt" id="cFlagVest1SituadoPAnt"/>porção anterior</label>
+					<label><input type="checkbox" name="tFlagVest1SituadoPMed" id="cFlagVest1SituadoPMed"/>porção média</label>
+					<label><input type="checkbox" name="tFlagVest1SituadoPPos" id="cFlagVest1SituadoPPos"/>porção posterior</label>
+					<label><input type="checkbox" name="tFlagVest1SituadoPEsq" id="cFlagVest1SituadoPEsq"/>porção esquerda</label>
+					<label><input type="checkbox" name="tFlagVest1SituadoPCen" id="cFlagVest1SituadoPCen"/>porção central</label>
+					<label><input type="checkbox" name="tFlagVest1SituadoPDir" id="cFlagVest1SituadoPDir"/>porção direita</label>
+					<label><input type="checkbox" name="tFlagVest1SituadoPInt" id="cFlagVest1SituadoPInt"/>porção interna</label>
+					<label><input type="checkbox" name="tFlagVest1SituadoPExt" id="cFlagVest1SituadoPExt"/>porção externa</label>
+					<label><input type="checkbox" name="tFlagVest1SituadoPSup" id="cFlagVest1SituadoPSup"/>porção superior</label>
+					<label><input type="checkbox" name="tFlagVest1SituadoPInf" id="cFlagVest1SituadoPInf"/>porção inferior</label>
+
+
+				</fieldset>
+
+				<p><label><input type="checkbox" name="tFlagVest1Extras" id="cFlagVest1Extras"
+					onclick="dEsconde('cFlagVest1Extras','fieldVestigio1Extras')"/>
+					Extras</label></p>
+				<fieldset id="fieldVestigio1Extras">
+					<label for="cExOutros">Outros:</label>
+					<input type="text" name="tFlagVest1ExOutros" id="cFlagVest1ExOutros" size="30" maxlenght="30" placeholder="Outros" /> </br>
+				</fieldset>
+			</fieldset>
+
+
+			<p><label id="cLabelVest2" hidden="true"><input type="checkbox" name="tFlagTodosVestigios"  id="cFlagVest2"
+				onclick="dEsconde('cFlagVest2','fieldVestigio2')"/>
+				Vestígio de Furto 2</label></p>
+
+			<fieldset id="fieldVestigio2">
+
+				<label><input type="checkbox" name="tFlagVest2DuasPessoas" id="cFlagVest2DuasPessoas"/>ensejando o concurso de mais de uma pessoa</label>
+				<label><input type="checkbox" name="tFlagVest2Recente" id="cFlagVest2Recente"/>recente</label>
+				<label><input type="checkbox" name="tFlagVest2PontoEntrada" id="cFlagVest2PontoEntrada"/>ponto de entrada</label>
+
+				<p><label><input type="checkbox" name="tFlagVest2Escalada" id="cFlagVest2Escalada"
+					onclick="dEsconde('cFlagVest2Escalada','fieldVestigio2Escalada')"/>
+					Escalada</label></p>
+				<fieldset id="fieldVestigio2Escalada">
+
+
+					<label><input type="checkbox" name="tFlagVest2EscaladaSemVestigio" id="cFlagVest2EscaladaSemVestigio"/>sem vestígios, modo provável</label>
+
+					<fieldset id="fieldVestigio2EscaladaSujidade" disabled="true">
+						<legend><label><input type="checkbox" name="tFlagVest2EscaladaSujidade" id="cFlagVest2EscaladaSujidade"
+						onclick="document.getElementById('fieldVestigio2EscaladaSujidade').disabled = !document.getElementById('cFlagVest2EscaladaSujidade').checked"/>
+						Sujidades</label></legend>
+						<label><input type="checkbox" name="tFlagVest2EscaladaSujidadeCalcado" id="cFlagVest2EscaladaSujidadeCalcado"/>calçado</label>
+						<label><input type="checkbox" name="tFlagVest2EscaladaSujidadePes" id="cFlagVest2EscaladaSujidadePes"/>pés</label>
+						<label><input type="checkbox" name="tFlagVest2EscaladaSujidadeMao" id="cFlagVest2EscaladaSujidadeMao"/>mãos</label>
+						<label><input type="checkbox" name="tFlagVest2EscaladaSujidadeTerra" id="cFlagVest2EscaladaSujidadeTerra"/>terra</label>
+					</fieldset>
+
+					<fieldset id="fieldVestigio2EscaladaFragmento" disabled="true">
+						<legend><label><input type="checkbox" name="tFlagVest2EscaladaFragmento" id="cFlagVest2EscaladaFragmento"
+						onclick="document.getElementById('fieldVestigio2EscaladaFragmento').disabled = !document.getElementById('cFlagVest2EscaladaFragmento').checked"/>
+						Fragmentos</label></legend>
+						<label><input type="checkbox" name="tFlagVest2EscaladaFragmentoCimento" id="cFlagVest2EscaladaFragmentoCimento"/>cimentícios</label>
+						<label><input type="checkbox" name="tFlagVest2EscaladaFragmentoCeramico" id="cFlagVest2EscaladaFragmentoCeramico"/>tijolo cerâmico</label>
+						<label><input type="checkbox" name="tFlagVest2EscaladaFragmentoVidro" id="cFlagVest2EscaladaFragmentoVidro"/>vidro</label>
+					</fieldset>
+				</fieldset>
+
+				<p><label><input type="checkbox" name="tFlagVest2Arrombamento" id="cFlagVest2Arrombamento"
+					onclick="dEsconde('cFlagVest2Arrombamento','fieldVestigio2Arrombamento')"/>
+					Arrombamento</label></p>
+
+				<fieldset id="fieldVestigio2Arrombamento">
+					<fieldset id="fieldVestigio2ArrombamentoAmolg" disabled="true">
+						<legend><label><input type="checkbox" name="tFlagVest2ArrombamentoAmolg" id="cFlagVest2ArrombamentoAmolg"
+						onclick="document.getElementById('fieldVestigio2ArrombamentoAmolg').disabled = !document.getElementById('cFlagVest2ArrombamentoAmolg').checked"/>
+						Amolgamento</label></legend>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoAmolgPorta" id="cFlagVest2ArrombamentoAmolgPorta"/>porta</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoAmolgJanela" id="cFlagVest2ArrombamentoAmolgJanela"/>janela</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoAmolgMetal" id="cFlagVest2ArrombamentoAmolgMetal"/>metal</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoAmolgMadeira" id="cFlagVest2ArrombamentoAmolgMadeira"/>madeira</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoAmolgInstIncerto" id="cFlagVest2ArrombamentoAmolgInstIncerto"/>instrumento incerto</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoAmolgInstAlav" id="cFlagVest2ArrombamentoAmolgInstAlav"/>instrumento na forma de alavanca</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoAmolgInstPerc" id="cFlagVest2ArrombamentoAmolgInstPerc"/>instrumento de ação percussiva</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoAmolgSemInst" id="cFlagVest2ArrombamentoAmolgSemInst"/>força humana</label>
+
+					</fieldset>
+
+					<fieldset id="fieldVestigio2ArrombamentoFraturas" disabled="true">
+						<legend><label><input type="checkbox" name="tFlagVest2ArrombamentoFraturas" id="cFlagVest2ArrombamentoFraturas"
+						onclick="document.getElementById('fieldVestigio2ArrombamentoFraturas').disabled = !document.getElementById('cFlagVest2ArrombamentoFraturas').checked"/>
+						Fraturas</label></legend>
+
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoFratPorta" id="cFlagVest2ArrombamentoFratPorta"/>porta</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoFratJanela" id="cFlagVest2ArrombamentoFratJanela"/>janela</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoFratMuro" id="cFlagVest2ArrombamentoFratMuro"/>muro</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoFratVidro" id="cFlagVest2ArrombamentoFratVidro"/>vidro/vridrilho</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoFratMadeira" id="cFlagVest2ArrombamentoFratMadeira"/>madeira</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoFratInstIncerto" id="cFlagVest2ArrombamentoFratInstIncerto"/>instrumento incerto</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoFratInstAlav" id="cFlagVest2ArrombamentoFratInstAlav"/>instrumento na forma de alavanca</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoFratInstPerc" id="cFlagVest2ArrombamentoFratInstPerc"/>instrumento de ação percussiva</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoFratSemIns" id="cFlagVest2ArrombamentoFratSemIns"/>força humana</label>
+
+					</fieldset>
+
+					<fieldset id="fieldVestigio2ArrombamentoFragmento" disabled="true">
+						<legend><label><input type="checkbox" name="tFlagVest2ArrombamentoFragmento" id="cFlagVest2ArrombamentoFragmento"
+						onclick="document.getElementById('fieldVestigio2ArrombamentoFragmento').disabled = !document.getElementById('cFlagVest2ArrombamentoFragmento').checked"/>
+						Fragmentos</label></legend>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoFragmentoCimento" id="cFlagVest2ArrombamentoFragmentoCimento"/>cimentícios</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoFragmentoCeramico" id="cFlagVest2ArrombamentoFragmentoCeramico"/>tijolo cerâmico</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoFragmentoVidro" id="cFlagVest2ArrombamentoFragmentoVidro"/>vidro</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoFragmentoMadeira" id="cFlagVest2ArrombamentoFragmentoMadeira"/>madeira</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoFragmentoMetal" id="cFlagVest2ArrombamentoFragmentoMetal"/>metal</label>
+					</fieldset>
+
+					<fieldset id="fieldVestigio2ArrombamentoAtritamentos" disabled="true">
+						<legend><label><input type="checkbox" name="tFlagVest2ArrombamentoAtritamentos" id="cFlagVest2ArrombamentoAtritamentos"
+						onclick="document.getElementById('fieldVestigio2ArrombamentoAtritamentos').disabled = !document.getElementById('cFlagVest2ArrombamentoAtritamentos').checked"/>
+						Atritamentos</label></legend>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoAtritamentosMixa" id="cFlagVest2ArrombamentoAtritamentosMixa"/>uso de chave mixa</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoAtritamentosInstr" id="cFlagVest2ArrombamentoAtritamentosInst"/>inserção de instrumento</label>
+					</fieldset>
+
+					<fieldset id="fieldVestigio2ArrombamentoRemocao" disabled="true">
+						<legend><label><input type="checkbox" name="tFlagVest2ArrombamentoRemocao" id="cFlagVest2ArrombamentoRemocao"
+						onclick="document.getElementById('fieldVestigio2ArrombamentoRemocao').disabled = !document.getElementById('cFlagVest2ArrombamentoRemocao').checked"/>
+						Remoção</label></legend>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoRemocaoTelhas" id="cFlagVest2ArrombamentoRemocaoTelhas"/>telhas</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoRemocaoForro" id="cFlagVest2ArrombamentoRemocaoForro"/>forro</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoRemocaoVidrilhos" id="cFlagVest2ArrombamentoRemocaoVidrilhos"/>vidrilhos</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoRemocaoFVidro" id="cFlagVest2ArrombamentoRemocaoFVidro"/>folha de vidro</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoRemocaoFPorta" id="cFlagVest2ArrombamentoRemocaoFPorta"/>folha de porta</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoRemocaoFJanela" id="cFlagVest2ArrombamentoRemocaoFJanela"/>folha de janela</label>
+						<label><input type="checkbox" name="tFlagVest2ArrombamentoRemocaoMVedacao" id="cFlagVest2ArrombamentoRemocaoMVedacao"/>moldura de vedação</label>
+					</fieldset>
+				</fieldset>
+
+				<p><label><input type="checkbox" name="tFlagVest2Desordem" id="cFlagVest2Desordem"
+					onclick="dEsconde('cFlagVest2Desordem','fieldVestigio2Desordem')"/>
+					Desordem Típica de Busca</label></p>
+
+				<fieldset id="fieldVestigio2Desordem">
+
+					<label><input type="checkbox" name="tFlagVest2DesordemQuartos" id="cFlagVest2DesordemQuartos"/>quartos</label>
+					<label><input type="checkbox" name="tFlagVest2DesordemQuarto" id="cFlagVest2DesordemQuarto"/>quarto</label>
+					<label><input type="checkbox" name="tFlagVest2DesordemCloset" id="cFlagVest2DesordemCloset"/>closet</label>
+					<label><input type="checkbox" name="tFlagVest2DesordemSala" id="cFlagVest2DesordemSala"/>sala</label>
+					<label><input type="checkbox" name="tFlagVest2DesordemCozinha" id="cFlagVest2DesordemCozinha"/>cozinha</label>
+					<label><input type="checkbox" name="tFlagVest2DesordemBanheiro" id="cFlagVest2DesordemBanheiro"/>banheiro</label>
+					<label><input type="checkbox" name="tFlagVest2DesordemGaragem" id="cFlagVest2DesordemGaragem"/>garagem</label>
+					<label><input type="checkbox" name="tFlagVest2DesordemLavanderia" id="cFlagVest2DesordemLavanderia"/>lavanderia</label>
+
+				</fieldset>
+
+				<p><label><input type="checkbox" name="tFlagVest2Situado" id="cFlagVest2Situado"
+					onclick="dEsconde('cFlagVest2Situado','fieldVestigio2Situado')"/>
+					Situado</label></p>
+
+				<fieldset id="fieldVestigio2Situado">
+					<label><input type="checkbox" name="tFlagVest2SituadoPAnt" id="cFlagVest2SituadoPAnt"/>porção anterior</label>
+					<label><input type="checkbox" name="tFlagVest2SituadoPMed" id="cFlagVest2SituadoPMed"/>porção média</label>
+					<label><input type="checkbox" name="tFlagVest2SituadoPPos" id="cFlagVest2SituadoPPos"/>porção posterior</label>
+					<label><input type="checkbox" name="tFlagVest2SituadoPEsq" id="cFlagVest2SituadoPEsq"/>porção esquerda</label>
+					<label><input type="checkbox" name="tFlagVest2SituadoPCen" id="cFlagVest2SituadoPCen"/>porção central</label>
+					<label><input type="checkbox" name="tFlagVest2SituadoPDir" id="cFlagVest2SituadoPDir"/>porção direita</label>
+					<label><input type="checkbox" name="tFlagVest2SituadoPInt" id="cFlagVest2SituadoPInt"/>porção interna</label>
+					<label><input type="checkbox" name="tFlagVest2SituadoPExt" id="cFlagVest2SituadoPExt"/>porção externa</label>
+					<label><input type="checkbox" name="tFlagVest2SituadoPSup" id="cFlagVest2SituadoPSup"/>porção superior</label>
+					<label><input type="checkbox" name="tFlagVest2SituadoPInf" id="cFlagVest2SituadoPInf"/>porção inferior</label>
+
+
+				</fieldset>
+
+				<p><label><input type="checkbox" name="tFlagVest2Extras" id="cFlagVest2Extras"
+					onclick="dEsconde('cFlagVest2Extras','fieldVestigio2Extras')"/>
+					Extras</label></p>
+				<fieldset id="fieldVestigio2Extras">
+					<label for="cExOutros">Outros:</label>
+					<input type="text" name="tFlagVest2ExOutros" id="cFlagVest2ExOutros" size="30" maxlenght="30" placeholder="Outros" /> </br>
+				</fieldset>
+			</fieldset>
+
+			<p><label id="cLabelVest3" hidden="true"><input type="checkbox" name="tFlagTodosVestigios"  id="cFlagVest3"
+				onclick="dEsconde('cFlagVest3','fieldVestigio3')"/>
+				Vestígio de Furto 3</label></p>
+
+			<fieldset id="fieldVestigio3">
+
+				<label><input type="checkbox" name="tFlagVest3DuasPessoas" id="cFlagVest3DuasPessoas"/>ensejando o concurso de mais de uma pessoa</label>
+				<label><input type="checkbox" name="tFlagVest3Recente" id="cFlagVest3Recente"/>recente</label>
+				<label><input type="checkbox" name="tFlagVest3PontoEntrada" id="cFlagVest3PontoEntrada"/>ponto de entrada</label>
+
+				<p><label><input type="checkbox" name="tFlagVest3Escalada" id="cFlagVest3Escalada"
+					onclick="dEsconde('cFlagVest3Escalada','fieldVestigio3Escalada')"/>
+					Escalada</label></p>
+				<fieldset id="fieldVestigio3Escalada">
+
+
+					<label><input type="checkbox" name="tFlagVest3EscaladaSemVestigio" id="cFlagVest3EscaladaSemVestigio"/>sem vestígios, modo provável</label>
+
+					<fieldset id="fieldVestigio3EscaladaSujidade" disabled="true">
+						<legend><label><input type="checkbox" name="tFlagVest3EscaladaSujidade" id="cFlagVest3EscaladaSujidade"
+						onclick="document.getElementById('fieldVestigio3EscaladaSujidade').disabled = !document.getElementById('cFlagVest3EscaladaSujidade').checked"/>
+						Sujidades</label></legend>
+						<label><input type="checkbox" name="tFlagVest3EscaladaSujidadeCalcado" id="cFlagVest3EscaladaSujidadeCalcado"/>calçado</label>
+						<label><input type="checkbox" name="tFlagVest3EscaladaSujidadePes" id="cFlagVest3EscaladaSujidadePes"/>pés</label>
+						<label><input type="checkbox" name="tFlagVest3EscaladaSujidadeMao" id="cFlagVest3EscaladaSujidadeMao"/>mãos</label>
+						<label><input type="checkbox" name="tFlagVest3EscaladaSujidadeTerra" id="cFlagVest3EscaladaSujidadeTerra"/>terra</label>
+					</fieldset>
+
+					<fieldset id="fieldVestigio3EscaladaFragmento" disabled="true">
+						<legend><label><input type="checkbox" name="tFlagVest3EscaladaFragmento" id="cFlagVest3EscaladaFragmento"
+						onclick="document.getElementById('fieldVestigio3EscaladaFragmento').disabled = !document.getElementById('cFlagVest3EscaladaFragmento').checked"/>
+						Fragmentos</label></legend>
+						<label><input type="checkbox" name="tFlagVest3EscaladaFragmentoCimento" id="cFlagVest3EscaladaFragmentoCimento"/>cimentícios</label>
+						<label><input type="checkbox" name="tFlagVest3EscaladaFragmentoCeramico" id="cFlagVest3EscaladaFragmentoCeramico"/>tijolo cerâmico</label>
+						<label><input type="checkbox" name="tFlagVest3EscaladaFragmentoVidro" id="cFlagVest3EscaladaFragmentoVidro"/>vidro</label>
+					</fieldset>
+				</fieldset>
+
+				<p><label><input type="checkbox" name="tFlagVest3Arrombamento" id="cFlagVest3Arrombamento"
+					onclick="dEsconde('cFlagVest3Arrombamento','fieldVestigio3Arrombamento')"/>
+					Arrombamento</label></p>
+
+				<fieldset id="fieldVestigio3Arrombamento">
+					<fieldset id="fieldVestigio3ArrombamentoAmolg" disabled="true">
+						<legend><label><input type="checkbox" name="tFlagVest3ArrombamentoAmolg" id="cFlagVest3ArrombamentoAmolg"
+						onclick="document.getElementById('fieldVestigio3ArrombamentoAmolg').disabled = !document.getElementById('cFlagVest3ArrombamentoAmolg').checked"/>
+						Amolgamento</label></legend>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoAmolgPorta" id="cFlagVest3ArrombamentoAmolgPorta"/>porta</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoAmolgJanela" id="cFlagVest3ArrombamentoAmolgJanela"/>janela</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoAmolgMetal" id="cFlagVest3ArrombamentoAmolgMetal"/>metal</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoAmolgMadeira" id="cFlagVest3ArrombamentoAmolgMadeira"/>madeira</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoAmolgInstIncerto" id="cFlagVest3ArrombamentoAmolgInstIncerto"/>instrumento incerto</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoAmolgInstAlav" id="cFlagVest3ArrombamentoAmolgInstAlav"/>instrumento na forma de alavanca</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoAmolgInstPerc" id="cFlagVest3ArrombamentoAmolgInstPerc"/>instrumento de ação percussiva</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoAmolgSemInst" id="cFlagVest3ArrombamentoAmolgSemInst"/>força humana</label>
+
+					</fieldset>
+
+					<fieldset id="fieldVestigio3ArrombamentoFraturas" disabled="true">
+						<legend><label><input type="checkbox" name="tFlagVest3ArrombamentoFraturas" id="cFlagVest3ArrombamentoFraturas"
+						onclick="document.getElementById('fieldVestigio3ArrombamentoFraturas').disabled = !document.getElementById('cFlagVest3ArrombamentoFraturas').checked"/>
+						Fraturas</label></legend>
+
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoFratPorta" id="cFlagVest3ArrombamentoFratPorta"/>porta</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoFratJanela" id="cFlagVest3ArrombamentoFratJanela"/>janela</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoFratMuro" id="cFlagVest3ArrombamentoFratMuro"/>muro</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoFratVidro" id="cFlagVest3ArrombamentoFratVidro"/>vidro/vridrilho</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoFratMadeira" id="cFlagVest3ArrombamentoFratMadeira"/>madeira</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoFratInstIncerto" id="cFlagVest3ArrombamentoFratInstIncerto"/>instrumento incerto</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoFratInstAlav" id="cFlagVest3ArrombamentoFratInstAlav"/>instrumento na forma de alavanca</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoFratInstPerc" id="cFlagVest3ArrombamentoFratInstPerc"/>instrumento de ação percussiva</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoFratSemIns" id="cFlagVest3ArrombamentoFratSemIns"/>força humana</label>
+
+					</fieldset>
+
+					<fieldset id="fieldVestigio3ArrombamentoFragmento" disabled="true">
+						<legend><label><input type="checkbox" name="tFlagVest3ArrombamentoFragmento" id="cFlagVest3ArrombamentoFragmento"
+						onclick="document.getElementById('fieldVestigio3ArrombamentoFragmento').disabled = !document.getElementById('cFlagVest3ArrombamentoFragmento').checked"/>
+						Fragmentos</label></legend>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoFragmentoCimento" id="cFlagVest3ArrombamentoFragmentoCimento"/>cimentícios</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoFragmentoCeramico" id="cFlagVest3ArrombamentoFragmentoCeramico"/>tijolo cerâmico</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoFragmentoVidro" id="cFlagVest3ArrombamentoFragmentoVidro"/>vidro</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoFragmentoMadeira" id="cFlagVest3ArrombamentoFragmentoMadeira"/>madeira</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoFragmentoMetal" id="cFlagVest3ArrombamentoFragmentoMetal"/>metal</label>
+					</fieldset>
+
+					<fieldset id="fieldVestigio3ArrombamentoAtritamentos" disabled="true">
+						<legend><label><input type="checkbox" name="tFlagVest3ArrombamentoAtritamentos" id="cFlagVest3ArrombamentoAtritamentos"
+						onclick="document.getElementById('fieldVestigio3ArrombamentoAtritamentos').disabled = !document.getElementById('cFlagVest3ArrombamentoAtritamentos').checked"/>
+						Atritamentos</label></legend>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoAtritamentosMixa" id="cFlagVest3ArrombamentoAtritamentosMixa"/>uso de chave mixa</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoAtritamentosInstr" id="cFlagVest3ArrombamentoAtritamentosInst"/>inserção de instrumento</label>
+					</fieldset>
+
+					<fieldset id="fieldVestigio3ArrombamentoRemocao" disabled="true">
+						<legend><label><input type="checkbox" name="tFlagVest3ArrombamentoRemocao" id="cFlagVest3ArrombamentoRemocao"
+						onclick="document.getElementById('fieldVestigio3ArrombamentoRemocao').disabled = !document.getElementById('cFlagVest3ArrombamentoRemocao').checked"/>
+						Remoção</label></legend>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoRemocaoTelhas" id="cFlagVest3ArrombamentoRemocaoTelhas"/>telhas</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoRemocaoForro" id="cFlagVest3ArrombamentoRemocaoForro"/>forro</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoRemocaoVidrilhos" id="cFlagVest3ArrombamentoRemocaoVidrilhos"/>vidrilhos</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoRemocaoFVidro" id="cFlagVest3ArrombamentoRemocaoFVidro"/>folha de vidro</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoRemocaoFPorta" id="cFlagVest3ArrombamentoRemocaoFPorta"/>folha de porta</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoRemocaoFJanela" id="cFlagVest3ArrombamentoRemocaoFJanela"/>folha de janela</label>
+						<label><input type="checkbox" name="tFlagVest3ArrombamentoRemocaoMVedacao" id="cFlagVest3ArrombamentoRemocaoMVedacao"/>moldura de vedação</label>
+					</fieldset>
+				</fieldset>
+
+				<p><label><input type="checkbox" name="tFlagVest3Desordem" id="cFlagVest3Desordem"
+					onclick="dEsconde('cFlagVest3Desordem','fieldVestigio3Desordem')"/>
+					Desordem Típica de Busca</label></p>
+
+				<fieldset id="fieldVestigio3Desordem">
+
+					<label><input type="checkbox" name="tFlagVest3DesordemQuartos" id="cFlagVest3DesordemQuartos"/>quartos</label>
+					<label><input type="checkbox" name="tFlagVest3DesordemQuarto" id="cFlagVest3DesordemQuarto"/>quarto</label>
+					<label><input type="checkbox" name="tFlagVest3DesordemCloset" id="cFlagVest3DesordemCloset"/>closet</label>
+					<label><input type="checkbox" name="tFlagVest3DesordemSala" id="cFlagVest3DesordemSala"/>sala</label>
+					<label><input type="checkbox" name="tFlagVest3DesordemCozinha" id="cFlagVest3DesordemCozinha"/>cozinha</label>
+					<label><input type="checkbox" name="tFlagVest3DesordemBanheiro" id="cFlagVest3DesordemBanheiro"/>banheiro</label>
+					<label><input type="checkbox" name="tFlagVest3DesordemGaragem" id="cFlagVest3DesordemGaragem"/>garagem</label>
+					<label><input type="checkbox" name="tFlagVest3DesordemLavanderia" id="cFlagVest3DesordemLavanderia"/>lavanderia</label>
+
+				</fieldset>
+
+				<p><label><input type="checkbox" name="tFlagVest3Situado" id="cFlagVest3Situado"
+				onclick="dEsconde('cFlagVest3Situado','fieldVestigio3Situado')"/>
+				Situado</label></p>
+
+				<fieldset id="fieldVestigio3Situado">
+					<label><input type="checkbox" name="tFlagVest3SituadoPAnt" id="cFlagVest3SituadoPAnt"/>porção anterior</label>
+					<label><input type="checkbox" name="tFlagVest3SituadoPMed" id="cFlagVest3SituadoPMed"/>porção média</label>
+					<label><input type="checkbox" name="tFlagVest3SituadoPPos" id="cFlagVest3SituadoPPos"/>porção posterior</label>
+					<label><input type="checkbox" name="tFlagVest3SituadoPEsq" id="cFlagVest3SituadoPEsq"/>porção esquerda</label>
+					<label><input type="checkbox" name="tFlagVest3SituadoPCen" id="cFlagVest3SituadoPCen"/>porção central</label>
+					<label><input type="checkbox" name="tFlagVest3SituadoPDir" id="cFlagVest3SituadoPDir"/>porção direita</label>
+					<label><input type="checkbox" name="tFlagVest3SituadoPInt" id="cFlagVest3SituadoPInt"/>porção interna</label>
+					<label><input type="checkbox" name="tFlagVest3SituadoPExt" id="cFlagVest3SituadoPExt"/>porção externa</label>
+					<label><input type="checkbox" name="tFlagVest3SituadoPSup" id="cFlagVest3SituadoPSup"/>porção superior</label>
+					<label><input type="checkbox" name="tFlagVest3SituadoPInf" id="cFlagVest3SituadoPInf"/>porção inferior</label>
+
+
+				</fieldset>
+
+				<p><label><input type="checkbox" name="tFlagVest3Extras" id="cFlagVest3Extras"
+				onclick="dEsconde('cFlagVest3Extras','fieldVestigio3Extras')"/>
+				Extras</label></p>
+				<fieldset id="fieldVestigio3Extras">
+					<label for="cExOutros">Outros:</label>
+					<input type="text" name="tFlagVest3ExOutros" id="cFlagVest3ExOutros" size="30" maxlenght="30" placeholder="Outros" /> </br>
+				</fieldset>
+			</fieldset>
+			<p><label id="cLabelMaqJDA1"><input type="checkbox" name="tFlagTodasMaqJDA"  id="cFlagMaqJDA1"
+				onclick="dEsconde('cFlagMaqJDA1','fieldMaqJDA1')"/>
+				Tipo de Máquina 1</label></p>
+
+			<fieldset id="fieldMaqJDA1">
+				<label for="cNumMaq">Quantidade:</label>
+				<input type="number" id="cNumMaq" value="1" size="4" min="1" maxlength="4"/>
+				<input type="button" id="cNumMaqBotMais" onclick="document.getElementById('cNumMaq').stepDown(1)" value="-" />
+				<input type="button" id="cNumMaqBotMenos" onclick="document.getElementById('cNumMaq').stepUp(1)" value="+" /></br>
+
+
+				<label><input type="radio" name="tFlagMaqJDA1TotemAntiga" id="cFlagMaqJDA1Totem"/>Totem</label>
+				<label><input type="radio" name="tFlagMaqJDA1TotemAntiga" id="cFlagMaqJDA1Antiga"/>Antiga</label>
+				<label><input type="checkbox" name="tFlagMaqJDA1Positivo" id="cFlagMaqJDA1Positivo"/>Jogo Constatado</label> </br>
+
+				<fieldSet> <legend>Porção</legend>
+					<label><input type="checkbox" name="tFlagMaqJDA1SituadoPAnt" id="cFlagMaqJDA1SituadoPAnt"/>anterior</label>
+					<label><input type="checkbox" name="tFlagMaqJDA1SituadoPMed" id="cFlagMaqJDA1SituadoPMed"/>média</label>
+					<label><input type="checkbox" name="tFlagMaqJDA1SituadoPPos" id="cFlagMaqJDA1SituadoPPos"/>posterior</label></br>
+					<label><input type="checkbox" name="tFlagMaqJDA1SituadoPEsq" id="cFlagMaqJDA1SituadoPEsq"/>esquerda</label>
+					<label><input type="checkbox" name="tFlagMaqJDA1SituadoPCen" id="cFlagMaqJDA1SituadoPCen"/>central</label>
+					<label><input type="checkbox" name="tFlagMaqJDA1SituadoPDir" id="cFlagMaqJDA1SituadoPDir"/>direita</label></br>
+					<label><input type="checkbox" name="tFlagMaqJDA1SituadoPInt" id="cFlagMaqJDA1SituadoPInt"/>interna</label>
+					<label><input type="checkbox" name="tFlagMaqJDA1SituadoPExt" id="cFlagMaqJDA1SituadoPExt"/>externa</label></br>
+					<label><input type="checkbox" name="tFlagMaqJDA1SituadoPSup" id="cFlagMaqJDA1SituadoPSup"/>superior</label>
+					<label><input type="checkbox" name="tFlagMaqJDA1SituadoPInf" id="cFlagMaqJDA1SituadoPInf"/>inferior</label>
+				</fieldSet>
+
+				<fieldSet> <legend>Gabinete</legend>
+					<label><input type="radio" name="tFlagMaqJDA1Gab" id="cFlagMaqJDA1GabMet"/>Metal</label>
+					<label><input type="radio" name="tFlagMaqJDA1Gab" id="cFlagMaqJDA1GabMad"/>Madeira</label>
+					<label><input type="radio" name="tFlagMaqJDA1Gab" id="cFlagMaqJDA1GabAmb" checked/>Metal e Madeira</label>
+				</fieldSet>
+				<fieldSet> <legend>Inscrição</legend>
+					<label><input type="checkbox" name="tFlagMaqJDA1InsHallow" id="cFlagMaqJDA1InsHallow"/>HALLOWEEN</label>
+					<label><input type="checkbox" name="tFlagMaqJDA1InsMulti" id="cFlagMaqJDA1InsMulti"/>MULTIJOGOS</label>
+					<label><input type="checkbox" name="tFlagMaqJDA1InsVideoG" id="cFlagMaqJDA1InsVideoG"/>VIDEO GAME</label>
+					<label><input type="checkbox" name="tFlagMaqJDA1InsHallow" id="cFlagMaqJDA1InsHallow"/>Totem de Internet</label>
+					<label><input type="checkbox" name="tFlagMaqJDA1InsMulti" id="cFlagMaqJDA1InsMulti"/>TOTEM BRASIL</label>
+					<label><input type="checkbox" name="tFlagMaqJDA1InsVideoG" id="cFlagMaqJDA1InsVideoG"/>VIDEO GAME</label>
+
+				</fieldSet>
+
+
+
+			</fieldset>
+
+			<input type="button" id="bt" value="Save data to file" onclick="saveFile()" />
+
+			<!-- <img id="imagemCabe" src="cabecalhoAme.png"> -->
+			<!-- <canvas id="canvas" src="cabecalhoAme.png"></canvas> -->
+			<script>
+
+			function generate(textoLaudo, flTitPara,sFileName) {
+
+			var arrParagraf = [];
+			for (var i=0; i< textoLaudo.length; i++){
+
+				var para = new docx.Paragraph({
+					alignment: docx.AlignmentType.JUSTIFIED,
+					children: [	new docx.TextRun({ text: textoLaudo[i], font: 'Spranq eco sans', size: 24, }), ],
+				});
+
+				var tituloTes = new docx.Paragraph({
+						alignment: docx.AlignmentType.LEFT,
+						spacing: { line: 276, before: 20 * 72 * 0.1, after: 20 * 72 * 0.05 },
+						children: [	new docx.TextRun({ text: textoLaudo[i], font: 'Spranq eco sans', size: 26, 	bold: true,}), ],
+				});
+
+				arrParagraf.push((flTitPara[i] ? tituloTes : para));
+
+			}
+
+
+				const doc1 = new docx.Document({
+					sections: [{
+							children:
+								arrParagraf
+					},],
+				});
+      	docx.Packer.toBlob(doc1).then((blob) => {
+        //console.log(blob);
+        	saveAs(blob, sFileName+".docx");
+          //console.log("Document created successfully");
+        });
+			}
+
+
+
+				//+ Carlos R. L. Rodrigues
+				//@ http://jsfromhell.com/string/extenso [rev. #3]
+				//foda, meu amigo. Se um dia ler isso, saiba que achei uma verdadeira obra de arte!!! - btw, mudei pra metros
+				String.prototype.extenso = function(c){
+					var ex = [
+						["zero", "um", "dois", "três", "quatro", "cinco", "seis", "sete", "oito", "nove", "dez", "onze", "doze", "treze", "quatorze", "quinze", "dezesseis", "dezessete", "dezoito", "dezenove"],
+						["dez", "vinte", "trinta", "quarenta", "cinqüenta", "sessenta", "setenta", "oitenta", "noventa"],
+						["cem", "cento", "duzentos", "trezentos", "quatrocentos", "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos"],
+						["mil", "milhão", "bilhão", "trilhão", "quadrilhão", "quintilhão", "sextilhão", "setilhão", "octilhão", "nonilhão", "decilhão", "undecilhão", "dodecilhão", "tredecilhão", "quatrodecilhão", "quindecilhão", "sedecilhão", "septendecilhão", "octencilhão", "nonencilhão"]
+					];
+					var a, n, v, i, n = this.replace(c ? /[^,\d]/g : /\D/g, "").split(","), e = " e ", $ = "metro", d = "centímetro", sl;
+					for(var f = n.length - 1, l, j = -1, r = [], s = [], t = ""; ++j <= f; s = []){
+						j && (n[j] = (("." + n[j]) * 1).toFixed(2).slice(2));
+						if(!(a = (v = n[j]).slice((l = v.length) % 3).match(/\d{3}/g), v = l % 3 ? [v.slice(0, l % 3)] : [], v = a ? v.concat(a) : v).length) continue;
+						for(a = -1, l = v.length; ++a < l; t = ""){
+							if(!(i = v[a] * 1)) continue;
+							i % 100 < 20 && (t += ex[0][i % 100]) ||
+							i % 100 + 1 && (t += ex[1][(i % 100 / 10 >> 0) - 1] + (i % 10 ? e + ex[0][i % 10] : ""));
+							s.push((i < 100 ? t : !(i % 100) ? ex[2][i == 100 ? 0 : i / 100 >> 0] : (ex[2][i / 100 >> 0] + e + t)) +
+							((t = l - a - 2) > -1 ? " " + (i > 1 && t > 0 ? ex[3][t].replace("ão", "ões") : ex[3][t]) : ""));
+						}
+						a = ((sl = s.length) > 1 ? (a = s.pop(), s.join(" ") + e + a) : s.join("") || ((!j && (n[j + 1] * 1 > 0) || r.length) ? "" : ex[0][0]));
+						a && r.push(a + (c ? (" " + (v.join("") * 1 > 1 ? j ? d + "s" : (/0{6,}$/.test(n[0]) ? "de " : "") + $.replace("o", "os") : j ? d : $)) : ""));
+					}
+					return r.join(e);
+				}
+
+
+    		let saveFile = () => {
+
+					var arrayLaudo = [""];
+					var flagTituloPara = [false];
+
+				//naturezas
+				var checkboxesNatureza = document.getElementsByName('tNatureza');
+				var finalNaturezas = "";
+				var textNatureza = document.getElementById('fieldNatureza');
+				for (var i=0; i<checkboxesNatureza.length; i++) {
+					if (checkboxesNatureza[i].checked) {
+						finalNaturezas = finalNaturezas + checkboxesNatureza[i].value + ", ";
+					}
+				}
+
+				//endereço
+				var finalRua = document.getElementById('cRua');
+
+				var finalCidade = document.getElementsByName('tCidade');
+				var fCidade = "";
+				for (var i=0; i<finalCidade.length; i++) {
+					if (finalCidade[i].checked) {
+						fCidade = finalCidade[i].value;
+					}
+				}
+
+				//preservação
+				var fPM1 = document.getElementById('cFlagPM1');
+				var fPM2 = document.getElementById('cFlagPM2');
+				var fPC1 = document.getElementById('cFlagPC1');
+				var fPC2 = document.getElementById('cFlagPC2');
+				var fGM1 = document.getElementById('cFlagGM1');
+				var fGM2 = document.getElementById('cFlagGM2');
+
+				//PM
+				var fNomePM1 = document.getElementById('cNomePM1');
+				var fREPM1   = document.getElementById('cREPM1');
+				var fNomePM2 = document.getElementById('cNomePM2');
+				var fREPM2   = document.getElementById('cREPM2');
+				var fVTRPM   = document.getElementById('cVTRPM');
+
+				//PC
+				var fNomePC1 = document.getElementById('cNomePC1');
+				var fRGPC1   = document.getElementById('cRGPC1');
+				var fNomePC2 = document.getElementById('cNomePC2');
+				var fRGPC2   = document.getElementById('cRGPC2');
+				var fVTRPC   = document.getElementById('cVTRPC');
+
+				//GM
+				var fNomeGM1 = document.getElementById('cNomeGM1');
+				var fRGGM1   = document.getElementById('cRGGM1');
+				var fNomeGM2 = document.getElementById('cNomeGM2');
+				var fRGGM2   = document.getElementById('cRGGM2');
+				var fVTRGM   = document.getElementById('cVTRGM');
+
+				var fPoliciamento = "O local não se encontrava preservado por policiamento.";
+
+
+				if (fPM1.checked || fPM2.checked || fPC1.checked || fPC2.checked || fGM1.checked || fGM2.checked){
+					fPoliciamento = "O local se encontrava preservado por policiamento.";
+
+					fPoliciamento = fPoliciamento + " Encontravam-se presentes: ";
+
+					fPoliciamento = fPoliciamento + (fPM1.checked&&fPM2.checked ? "\r\nPoliciais Militares: ": (fPM1.checked||fPM2.checked ? "\r\nPolicial Militar: ": ""));
+
+					fPoliciamento = fPoliciamento + (fPM1.checked ? fNomePM1.value+(fREPM1.value ? " - RE:"+fREPM1.value+", " : ", ") : "");
+					fPoliciamento = fPoliciamento + (fPM2.checked ? fNomePM2.value+(fREPM2.value ? " - RE:"+fREPM2.value+", " : ", ") : "");
+					fPoliciamento = fPoliciamento + (fVTRPM.value ? "Viatura: "+fVTRPM.value+"." : "") + "";
+
+					fPoliciamento = fPoliciamento + (fGM1.checked&&fGM2.checked ? "\r\nGuardas Municipais: ": (fGM1.checked||fGM2.checked ? "\r\nGuarda Municipal: ": ""));
+					fPoliciamento = fPoliciamento + (fGM1.checked ? fNomeGM1.value+(fRGGM1.value ? " - RG:"+fRGGM1.value+", " : ", ") : "");
+					fPoliciamento = fPoliciamento + (fGM2.checked ? fNomeGM2.value+(fRGGM2.value ? " - RG:"+fRGGM2.value+", " : ", ") : "");
+					fPoliciamento = fPoliciamento + (fVTRGM.value ? "Viatura: "+fVTRGM.value+"." : "") + "";
+
+					fPoliciamento = fPoliciamento + (fPC1.checked&&fPC2.checked ? "\r\nPoliciais Civis: ": (fPC1.checked||fPC2.checked ? "\r\nPolicial Civil: ": ""));
+					fPoliciamento = fPoliciamento + (fPC1.checked ? fNomePC1.value+(fRGPC1.value ? " - RG:"+fRGPC1.value+", " : ", ") : "");
+					fPoliciamento = fPoliciamento + (fPC2.checked ? fNomePC2.value+(fRGPC2.value ? " - RG:"+fRGPC2.value+", " : ", ") : "");
+					fPoliciamento = fPoliciamento + (fVTRPC.value ? "Viatura: "+fVTRPC.value+"." : "") + "";
+				}
+
+				//Inclui objetivo do exame
+				var finalObjetivoExame ="";
+				if (document.getElementById("cObjetivoDoExame").checked){
+					finalObjetivoExame = "Objetivo do exame: " + document.getElementById("taObjExam").value;
+					finalObjetivoExame = finalObjetivoExame.trim();
+					finalObjetivoExame = finalObjetivoExame + (finalObjetivoExame.slice(-1)=="." ? "":".");
+				}
+
+
+				//inclui data dos fatos
+
+				var finalDataFatos = "";
+				var finalDataeHoraFatos = "";
+				if(document.getElementById("cDataFatos").value){
+					finalDataFatos = document.getElementById("cDataFatos").value;
+					finalDataeHoraFatos = (document.getElementById("cDataFatos").value ? "\r\n"+"A data e horário informados dos eventos era: "
+					+ finalDataFatos.slice(-2) + "/"+finalDataFatos.substring(5,7)+"/"+finalDataFatos.slice(0,4)
+					+ (document.getElementById("cHoraFatos").value ? " às "+document.getElementById("cHoraFatos").value+".": "")  : ".")
+				}
+
+
+				//Local
+				var fLocal = "";
+				var finalTipodeLocal = document.getElementsByName('tZoneamento');
+				var fMaterialEdif = "";
+				var finalEdifMaterial = document.getElementsByName('tMaterial');
+
+				var fImovelEdifica = "";
+
+				for (var i=0; i<finalEdifMaterial.length;i++){
+					if(finalEdifMaterial[i].checked){
+						fMaterialEdif = finalEdifMaterial[i].value;
+					}
+				}
+
+				for (var i=0; i<finalTipodeLocal.length; i++) {
+					if (finalTipodeLocal[i].checked) {
+						fLocal = finalTipodeLocal[i].value;
+						switch (i){
+							case 4:
+								fImovelEdifica = "propriedade"; break;
+							case 4:
+								fImovelEdifica = "propriedade"; break;
+							case 6:
+								fImovelEdifica = ""; break;
+
+							default:
+								fImovelEdifica = "edificação em "+fMaterialEdif +",";
+						}
+					}
+				}
+
+				var fIsolado = "";
+				var finalIsolado = document.getElementsByName('tViz');
+				for (var i=0; i<finalIsolado.length;i++){
+					if(finalIsolado[i].checked){
+						fIsolado = finalIsolado[i].value;
+					}
+				}
+
+				var fIsoladoLados = "";
+				var finalIsoladoLados = document.getElementsByName('tLado');
+				for (var i=0; i<finalIsoladoLados.length;i++){
+					if(finalIsoladoLados[i].checked){
+						fIsoladoLados = finalIsoladoLados[i].value;
+					}
+				}
+
+				var fAlinhamento = "";
+				var finalAlinhamento = document.getElementsByName('tAlin');
+				for (var i=0; i<finalAlinhamento.length;i++){
+					if(finalAlinhamento[i].checked){
+						fAlinhamento = finalAlinhamento[i].value;
+					}
+				}
+
+				var fNivel = "";
+				var finalNivel = document.getElementsByName('tNiv');
+				for (var i=0; i<finalNivel.length;i++){
+					if(finalNivel[i].checked){
+						fNivel = finalNivel[i].value;
+					}
+				}
+
+				var fAcesso ="";
+				var finalAcesso = document.getElementsByName('tAcesso');
+				for (var i=0; i<finalAcesso.length;i++){
+					if(finalAcesso[i].checked){
+						fAcesso = finalAcesso[i].value;
+					}
+				}
+
+
+				var flDotado = "";
+
+				var flAcYale = document.getElementById('cAcessoFechadura');
+				var flAcElet = document.getElementById('cAcessoEletronico');
+				var flAcPort = document.getElementById('cAcessoPortaria');
+				var flAcPSoc = document.getElementById('cPortaoSocial');
+
+				if (flAcYale.checked||flAcElet.checked||flAcPort.checked||flAcPSoc.checked){
+				flDotado = ", dotado de";
+					if(flAcYale.checked) flDotado = flDotado+" fechadura do tipo \'Yale\',";
+					if(flAcElet.checked) flDotado = flDotado+" acionamento eletrônico,";
+					if(flAcPort.checked) flDotado = flDotado+" portaria,";
+					if(flAcPSoc.checked) flDotado = flDotado+" portão social,";
+					flDotado = flDotado.slice(0,-1)+".";
+					flDotado = flDotado.slice(0,flDotado.lastIndexOf(','))+ " e "+ flDotado.slice(flDotado.lastIndexOf(',')+2);
+
+				} else {
+				flDotado = ".";
+				}
+
+				let fAcessoPrincipal =
+				', cujo acesso principal era portão '+fAcesso+flDotado;
+
+				var fOfendi = document.getElementById('cOfend');
+				var fCercaElet = document.getElementById('cCercaEletrica');
+				var finalOfendi = "";
+				if (fOfendi.checked){
+					finalOfendi = " Local contava ainda com ofendículos.";
+				}
+				if (fCercaElet.checked){
+					finalOfendi = " Local contava ainda com cerca elétrica.";
+				}
+				if(fCercaElet.checked&&fOfendi.checked){
+					finalOfendi = " Local contava ainda com cerca elétrica e ofendículos.";
+				}
+
+				var fVedacao = "";
+				var fVedacaoNao = "";
+				var finalVedacao = document.getElementsByName('tVedacao');
+				for (var i=0; i<finalVedacao.length;i++){
+					if(finalVedacao[i].checked){
+						fVedacao = finalVedacao[i].value+', com aproximadamente '+ document.getElementById("slidAltura").value.replace('.',',')
+						+'m ('+ document.getElementById("slidAltura").value.replace('.',',').extenso(true) +') de altura em seu ponto mais baixo'+fAcessoPrincipal+finalOfendi;
+						if (i==3){
+							fVedacaoNao = " não";
+							fVedacao = "";
+						}
+					}
+				}
+				var flagTemVF = false;
+				var flagTemJogoDeAzar = false;
+
+				var fTodosVF = "";
+				
+				var gTodosVF = document.getElementsByName('tFlagTodosVestigios');
+				for (var i=0; i<gTodosVF.length; i++){
+					if(gTodosVF[i].checked){
+						flagTemVF = true;
+						var montaFlagVF = 'cFlagVest'+(i+1);
+						var VFE="";
+						if(document.getElementById(montaFlagVF+"Escalada").checked){
+							if(document.getElementById(montaFlagVF+"EscaladaSemVestigio").checked)
+							VFE = "Apesar de não ter sido encontrado o ponto exato de entrada, entende-se escalada como modo provável de acesso ao interior da propriedade.";
+							else
+							VFE = "Vestígio compatível com escalada.";
+
+							if(document.getElementById(montaFlagVF+"EscaladaSujidade").checked){
+								VFE = VFE.slice(0,-1) + ", caracterizado por sujidades.";
+								if(document.getElementById(montaFlagVF+"EscaladaSujidadeCalcado").checked){
+									VFE = VFE.slice(0,-1) + " típicas de calçado.";
+								}
+								if(document.getElementById(montaFlagVF+"EscaladaSujidadePes").checked){
+									VFE = VFE.slice(0,-1) + " que ensejam marcas de pés.";
+								}
+								if(document.getElementById(montaFlagVF+"EscaladaSujidadeMao").checked){
+									VFE = VFE.slice(0,-1) + " que ensejam marcas de mãos.";
+								}
+								if(document.getElementById(montaFlagVF+"EscaladaSujidadeTerra").checked){
+									VFE = VFE.slice(0,-1) + " em terra.";
+								}
+
+								if((VFE.indexOf("que ensejam marcas de") != VFE.lastIndexOf("que ensejam marcas de"))&&(VFE.search("que ensejam marcas de")!=-1)){
+									VFE = VFE.slice(0,VFE.lastIndexOf("que ensejam marcas de"))+ "e " +VFE.slice(VFE.lastIndexOf("que ensejam marcas de")+22);
+								}
+							}
+							if(document.getElementById(montaFlagVF+"EscaladaFragmento").checked){
+
+								if(VFE.search("caracterizado por")==-1){
+									VFE = VFE.slice(0,-1) + ", caracterizado por fragmentos.";
+								} else {
+									VFE = VFE.slice(0,-1) + " e fragmentos.";
+								}
+
+								if(document.getElementById(montaFlagVF+"EscaladaFragmentoCimento").checked){
+									VFE = VFE.slice(0,-1) + " cimentícios caídos ao solo.";
+								}
+								if(document.getElementById(montaFlagVF+"EscaladaFragmentoCeramico").checked){
+									VFE = VFE.slice(0,-1) + " cerâmicos caídos ao solo.";
+								}
+								if(document.getElementById(montaFlagVF+"EscaladaFragmentoVidro").checked){
+									VFE = VFE.slice(0,-1) + " de vidro caídos ao solo.";
+								}
+
+								var vCaS = VFE.lastIndexOf(" caídos ao solo");
+								var vCaS = VFE.lastIndexOf(" caídos ao solo",vCaS-1);
+
+								while (vCaS != -1){
+
+									VFE = VFE.slice(0,vCaS)+","+VFE.slice(vCaS+15);
+									vCaS = VFE.lastIndexOf(" caídos ao solo", vCaS-1);
+								}
+							}
+						}
+						if(document.getElementById(montaFlagVF+"Arrombamento").checked){
+							VFE = VFE + " Danos típicos de arrombamento.";
+							var poeVirgula = false;
+
+							if	((document.getElementById(montaFlagVF+"ArrombamentoAmolg").checked)||
+								(document.getElementById(montaFlagVF+"ArrombamentoFraturas").checked)||
+								(document.getElementById(montaFlagVF+"ArrombamentoFragmento").checked)||
+								(document.getElementById(montaFlagVF+"ArrombamentoAtritamentos").checked)||
+								(document.getElementById(montaFlagVF+"ArrombamentoRemocao").checked))
+								VFE = VFE.slice(0,-1) + ", caracterizado por ";
+
+							if(document.getElementById(montaFlagVF+"ArrombamentoAmolg").checked){
+								var poeVirgulaArromb = false;
+								VFE = VFE.slice(0,-1) + (poeVirgula ? ",":"") + " amolgamentos."; poeVirgula=true;
+								if(document.getElementById(montaFlagVF+"ArrombamentoAmolgPorta").checked){
+									VFE = VFE.slice(0,-1) + (poeVirgulaArromb ? ",":"") + " em porta."; poeVirgulaArromb=true;
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoAmolgJanela").checked){
+									VFE = VFE.slice(0,-1) + (poeVirgulaArromb ? ",":"") + " em janela."; poeVirgulaArromb=true;
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoAmolgMetal").checked){
+									VFE = VFE.slice(0,-1) + (poeVirgulaArromb ? ",":"") + " em metal."; poeVirgulaArromb=true;
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoAmolgMadeira").checked){
+									VFE = VFE.slice(0,-1) + (poeVirgulaArromb ? ",":"") + " em madeira."; poeVirgulaArromb=true;
+								}
+								var comEmprego = true;
+								var flagInstrumento = true;
+								if(document.getElementById(montaFlagVF+"ArrombamentoAmolgInstIncerto").checked){
+									VFE = VFE.slice(0,-1) + (poeVirgulaArromb ? ",":"") + (comEmprego ? " com emprego":"")
+										+(flagInstrumento ? " de instrumento":"")+" incerto."; poeVirgulaArromb=true; comEmprego = false; flagInstrumento= false;
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoAmolgInstAlav").checked){
+									VFE = VFE.slice(0,-1) + (poeVirgulaArromb ? ",":"") + (comEmprego ? " com emprego":"")
+										+(flagInstrumento ? " de instrumento":"")+" na forma de alavanca."; poeVirgulaArromb=true; comEmprego = false; flagInstrumento= false;
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoAmolgInstPerc").checked){
+									VFE = VFE.slice(0,-1) + (poeVirgulaArromb ? ",":"") + (comEmprego ? " com emprego":"")
+										+(flagInstrumento ? " de instrumento":"")+" de ação percussiva."; poeVirgulaArromb=true; comEmprego = false; flagInstrumento= false;
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoAmolgSemInst").checked){
+									VFE = VFE.slice(0,-1) + (poeVirgulaArromb ? ",":"") + (comEmprego ? " com emprego":"")
+										+(flagInstrumento ? "":" e")+" de força humana desassistida de instrumentos."; poeVirgulaArromb=true; comEmprego = false; flagInstrumento= false;
+								}
+
+
+							}
+							if(document.getElementById(montaFlagVF+"ArrombamentoFraturas").checked){
+								VFE = VFE.slice(0,-1) + (poeVirgula ? ",":"") + " fraturas."; poeVirgula=true;
+
+								var poeVirgulaFratura = false;
+
+								if(document.getElementById(montaFlagVF+"ArrombamentoFratPorta").checked){
+									VFE = VFE.slice(0,-1) + (poeVirgulaFratura ? ",":"") + " em porta."; poeVirgulaFratura=true;
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoFratJanela").checked){
+									VFE = VFE.slice(0,-1) + (poeVirgulaFratura ? ",":"") + " em janela."; poeVirgulaFratura=true;
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoFratMuro").checked){
+									VFE = VFE.slice(0,-1) + (poeVirgulaFratura ? ",":"") + " em muro de alvenaria."; poeVirgulaFratura=true;
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoFratVidro").checked){
+									VFE = VFE.slice(0,-1) + (poeVirgulaFratura ? ",":"") + " em porção vítrea."; poeVirgulaFratura=true;
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoFratMadeira").checked){
+									VFE = VFE.slice(0,-1) + (poeVirgulaFratura ? ",":"") + " em madeira."; poeVirgulaFratura=true;
+								}
+
+								var comEmpregoFrat = true;
+								var flagInstrumentoFrat = true;
+								if(document.getElementById(montaFlagVF+"ArrombamentoFratInstIncerto").checked){
+									VFE = VFE.slice(0,-1) + (poeVirgulaFratura ? ",":"") + (comEmpregoFrat ? " com emprego":"")
+										+(flagInstrumentoFrat ? " de instrumento":"")+" incerto."; poeVirgulaFratura=true; comEmpregoFrat = false; flagInstrumentoFrat= false;
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoFratInstAlav").checked){
+									VFE = VFE.slice(0,-1) + (poeVirgulaFratura ? ",":"") + (comEmpregoFrat ? " com emprego":"")
+										+(flagInstrumentoFrat ? " de instrumento":"")+" na forma de alavanca."; poeVirgulaFratura=true; comEmpregoFrat = false; flagInstrumentoFrat= false;
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoFratInstPerc").checked){
+									VFE = VFE.slice(0,-1) + (poeVirgulaFratura ? ",":"") + (comEmpregoFrat ? " com emprego":"")
+										+(flagInstrumentoFrat ? " de instrumento":"")+" de ação percussiva."; poeVirgulaFratura=true; comEmpregoFrat = false; flagInstrumentoFrat= false;
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoFratSemIns").checked){
+									VFE = VFE.slice(0,-1) + (poeVirgulaFratura ? ",":"") + (comEmpregoFrat ? " com emprego":"")
+										+(flagInstrumentoFrat ? "":" e")+" de força humana desassistida de instrumentos."; poeVirgulaFratura=true; comEmpregoFrat = false; flagInstrumentoFrat= false;
+								}
+
+							}
+
+							if(document.getElementById(montaFlagVF+"ArrombamentoFragmento").checked){
+								VFE = VFE.slice(0,-1) + (poeVirgula ? ",":"") + " presença de fragmentos."; poeVirgula=true;
+
+								if(document.getElementById(montaFlagVF+"ArrombamentoFragmentoCimento").checked){
+									VFE = VFE.slice(0,-1) + " cimentícios caídos ao solo.";
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoFragmentoCeramico").checked){
+									VFE = VFE.slice(0,-1) + " cerâmicos caídos ao solo.";
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoFragmentoVidro").checked){
+									VFE = VFE.slice(0,-1) + " de vidro caídos ao solo.";
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoFragmentoMadeira").checked){
+									VFE = VFE.slice(0,-1) + " de madeira caídos ao solo.";
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoFragmentoMetal").checked){
+									VFE = VFE.slice(0,-1) + " em metal caídos ao solo.";
+								}
+								var vCaS = VFE.lastIndexOf(" caídos ao solo");
+								var vCaS = VFE.lastIndexOf(" caídos ao solo",vCaS-1);
+
+								while (vCaS != -1){
+
+									VFE = VFE.slice(0,vCaS)+","+VFE.slice(vCaS+15);
+									vCaS = VFE.lastIndexOf(" caídos ao solo", vCaS-1);
+								}
+							}
+
+							if(document.getElementById(montaFlagVF+"ArrombamentoAtritamentos").checked){
+								VFE = VFE.slice(0,-1) + (poeVirgula ? ",":"") + " atritamentos."; poeVirgula=true;
+
+								if(document.getElementById(montaFlagVF+"ArrombamentoAtritamentosMixa").checked){
+									VFE = VFE.slice(0,-1) + " que ensejam uso de chave mixa.";
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoAtritamentosMixa").checked){
+									VFE = VFE.slice(0,-1) + " que ensejam inserção de instrumento.";
+								}
+
+							}
+							if(document.getElementById(montaFlagVF+"ArrombamentoRemocao").checked){
+								VFE = VFE.slice(0,-1) + (poeVirgula ? ",":"") + " remoção de itens."; poeVirgula=true;
+								var poeVirgulaRem = false;
+								var porDentreQuaislRem = true;
+
+								if(document.getElementById(montaFlagVF+"ArrombamentoRemocaoTelhas").checked){
+									VFE = VFE.slice(0,-1) + (porDentreQuaislRem ? " dentre os quais":",") +" telhas."; porDentreQuaislRem = false;
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoRemocaoForro").checked){
+									VFE = VFE.slice(0,-1) + (porDentreQuaislRem ? " dentre os quais":",") +" segmentos do forro."; porDentreQuaislRem = false;
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoRemocaoVidrilhos").checked){
+									VFE = VFE.slice(0,-1) + (porDentreQuaislRem ? " dentre os quais":",") +" vidrilhos."; porDentreQuaislRem = false;
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoRemocaoFVidro").checked){
+									VFE = VFE.slice(0,-1) + (porDentreQuaislRem ? " dentre os quais":",") +" folha de vidro."; porDentreQuaislRem = false;
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoRemocaoFPorta").checked){
+									VFE = VFE.slice(0,-1) + (porDentreQuaislRem ? " dentre os quais":",") +" folha de porta."; porDentreQuaislRem = false;
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoRemocaoFJanela").checked){
+									VFE = VFE.slice(0,-1) + (porDentreQuaislRem ? " dentre os quais":",") +" folha de janela."; porDentreQuaislRem = false;
+								}
+								if(document.getElementById(montaFlagVF+"ArrombamentoRemocaoMVedacao").checked){
+									VFE = VFE.slice(0,-1) + (porDentreQuaislRem ? " dentre os quais":",") +" moldura da vedação."; porDentreQuaislRem = false;
+								}
+							}
+						}
+						if(document.getElementById(montaFlagVF+"Desordem").checked){
+							VFE = VFE + " Constatou-se desordem típica de busca.";
+
+							var poeVirgulaDes = false;
+
+							if(document.getElementById(montaFlagVF+"DesordemQuartos").checked){
+								VFE = VFE.slice(0,-1) + (poeVirgulaDes ? ",":"") +" nos quartos."; poeVirgulaDes = true;
+							}
+							if(document.getElementById(montaFlagVF+"DesordemQuarto").checked){
+								VFE = VFE.slice(0,-1) + (poeVirgulaDes ? ",":"") +" no quarto."; poeVirgulaDes = true;
+							}
+							if(document.getElementById(montaFlagVF+"DesordemCloset").checked){
+								VFE = VFE.slice(0,-1) + (poeVirgulaDes ? ",":"") +" no closet."; poeVirgulaDes = true;
+							}
+							if(document.getElementById(montaFlagVF+"DesordemSala").checked){
+								VFE = VFE.slice(0,-1) + (poeVirgulaDes ? ",":"") +" na sala."; poeVirgulaDes = true;
+							}
+							if(document.getElementById(montaFlagVF+"DesordemCozinha").checked){
+								VFE = VFE.slice(0,-1) + (poeVirgulaDes ? ",":"") +" na cozinha."; poeVirgulaDes = true;
+							}
+							if(document.getElementById(montaFlagVF+"DesordemBanheiro").checked){
+								VFE = VFE.slice(0,-1) + (poeVirgulaDes ? ",":"") +" no banheiro."; poeVirgulaDes = true;
+							}
+							if(document.getElementById(montaFlagVF+"DesordemGaragem").checked){
+								VFE = VFE.slice(0,-1) + (poeVirgulaDes ? ",":"") +" na garagem."; poeVirgulaDes = true;
+							}
+							if(document.getElementById(montaFlagVF+"DesordemLavanderia").checked){
+								VFE = VFE.slice(0,-1) + (poeVirgulaDes ? ",":"") +" no lavanderia."; poeVirgulaDes = true;
+							}
+
+						}
+
+						if(document.getElementById(montaFlagVF+"Situado").checked){
+							VFE = VFE.slice(0,-1) + " situado na";
+
+							var porPorcaoSit = true;
+							var flagDaSit = false;
+							if(document.getElementById(montaFlagVF+"SituadoPAnt").checked){
+								VFE = VFE + (porPorcaoSit ? " porção":"")+" anterior"; porPorcaoSit = false; flagDaSit = true;
+							}
+							if(document.getElementById(montaFlagVF+"SituadoPMed").checked){
+								VFE = VFE + (porPorcaoSit ? " porção":"")+" média"; porPorcaoSit = false; flagDaSit = true;
+							}
+							if(document.getElementById(montaFlagVF+"SituadoPPos").checked){
+								VFE = VFE + (porPorcaoSit ? " porção":"")+" posterior"; porPorcaoSit = false; flagDaSit = true;
+							}
+							if(document.getElementById(montaFlagVF+"SituadoPEsq").checked){
+								VFE = VFE + (porPorcaoSit ? " porção":"")+" esquerda"; porPorcaoSit = false; flagDaSit = true;
+							}
+							if(document.getElementById(montaFlagVF+"SituadoPCen").checked){
+								VFE = VFE + (porPorcaoSit ? " porção":"")+" central"; porPorcaoSit = false; flagDaSit = true;
+							}
+							if(document.getElementById(montaFlagVF+"SituadoPDir").checked){
+								VFE = VFE + (porPorcaoSit ? " porção":"")+" direita"; porPorcaoSit = false; flagDaSit = true;
+							}
+							if(document.getElementById(montaFlagVF+"SituadoPInt").checked){
+								VFE = VFE + (porPorcaoSit ? " porção":"")+" interna"; porPorcaoSit = false; flagDaSit = true;
+							}
+							if(document.getElementById(montaFlagVF+"SituadoPExt").checked){
+								VFE = VFE + (porPorcaoSit ? " porção":"")+" externa"; porPorcaoSit = false; flagDaSit = true;
+							}
+							if(document.getElementById(montaFlagVF+"SituadoPSup").checked){
+								VFE = VFE + (porPorcaoSit ? " porção":"")+" superior"; porPorcaoSit = false; flagDaSit = true;
+							}
+							if(document.getElementById(montaFlagVF+"SituadoPInf").checked){
+								VFE = VFE + (porPorcaoSit ? " porção":"")+" inferior"; porPorcaoSit = false; flagDaSit = true;
+							}
+
+							if (flagDaSit) VFE = VFE+" da";
+							VFE = VFE + " propriedade.";
+						}
+						if(document.getElementById(montaFlagVF+"Extras").checked){
+							VFE = VFE + " Detalhe adicional: " + document.getElementById(montaFlagVF+"ExOutros").value;
+						}
+						//compõe o texto
+						fTodosVF = fTodosVF + "\r\n\t"+ (i+1) + ") "+ VFE;
+					}
+
+				}
+				if (flagTemVF){
+					fTodosVF = "Despertou interesse pericial:" + fTodosVF;
+					<!-- console.log(fTodosVF); -->
+				}
+
+
+				fTodasMaquinas = "";
+
+
+				let fTextoLocal =
+				'\t Tratava-se de '+fImovelEdifica+' do tipo '+fLocal+', '+fIsolado+' de vizinhos '+fIsoladoLados+', erguido '+fAlinhamento+' e '+fNivel+' geral da via pública,'+
+				fVedacaoNao + ' vedado do passeio público'+fVedacao;
+				//incluir detalhes de local de jogo de azar
+
+
+				let data =
+				'\t Em 30 de julho de 2022 no Núcleo de Perícias Criminalística de Americana, do Instituto de Criminalística'+
+				', da Superintendência da Polícia Técnico-Científica, da Secretaria de Segurança Pública do Estado de São Paulo'+
+				', em conformidade com o disposto no Decreto-Lei n.º 3.689/41, o Diretor deste instituto, '+
+				'Doutor Samuel Alves de Melo Neto designou o Perito Criminal '+document.getElementById('cPerito').value+' para proceder a este exame pericial'+
+				', em atendimento à requisição da autoridade de polícia judiciária da '+ document.getElementById('cDelegacia').value + ', '
+				+document.getElementById('cAutoridade').value+ '.';
+
+				arrayLaudo[0] = data;
+
+				data =
+				'1 - Disposições Preliminares';
+
+				arrayLaudo.push(data);
+				flagTituloPara[arrayLaudo.length-1]=true;
+
+				data =
+				'\t Equipe pericial acionada para local de '+ (!finalNaturezas ? "natureza não informada, " : finalNaturezas) + 'endereço '+
+				(!finalRua.value ? "não informado" : finalRua.value)+ ", " + fCidade + '/SP.';
+
+				if(data != ""){
+					arrayLaudo.push(data);
+					flagTituloPara[arrayLaudo.length-1]=false;
+				}
+
+				data =
+				(document.getElementById("cObjetivoDoExame").checked ? finalObjetivoExame : "");
+
+				if(data != ""){
+					arrayLaudo.push(data);
+					flagTituloPara[arrayLaudo.length-1]=false;
+				}
+
+				data = finalDataeHoraFatos;
+				if(data != ""){
+					arrayLaudo.push(data);
+					flagTituloPara[arrayLaudo.length-1]=false;
+				}
+
+				data = fPoliciamento;
+
+				arrayLaudo.push(data);
+				flagTituloPara[arrayLaudo.length-1]=false;
+
+				data = (document.getElementById('cProtocolo').value ? "Protocolo: "+document.getElementById('cProtocolo').value+"." : "");
+				if(data != ""){ arrayLaudo.push(data); flagTituloPara[arrayLaudo.length-1]=false;}
+
+				data = (document.getElementById('cREP').value ? "Laudo Número: "+document.getElementById('cREP').value+"." : "");
+				if(data != ""){ arrayLaudo.push(data); flagTituloPara[arrayLaudo.length-1]=false;}
+
+				data = (document.getElementById('cBO').value ? "Boletim de Ocorrência: "+document.getElementById('cBO').value+"." : "Boletim de Ocorrência não informado, em descumprimento à Resolução SSP-26 de 17/04/2019.");
+				if(data != ""){ arrayLaudo.push(data); flagTituloPara[arrayLaudo.length-1]=false;}
+
+				data = '2 - Do Local';
+
+				arrayLaudo.push(data);
+				flagTituloPara[arrayLaudo.length-1]=true;
+
+				data = fTextoLocal;
+				arrayLaudo.push(data);
+				flagTituloPara[arrayLaudo.length-1]=false;
+
+				data = '3 - Dos Exames';
+
+				arrayLaudo.push(data);
+				flagTituloPara[arrayLaudo.length-1]=true;
+
+				data = (flagTemVF ? fTodosVF : "");
+				arrayLaudo.push(data);
+				flagTituloPara[arrayLaudo.length-1]=false;
+
+
+				var currentDate= new Date();
+
+				var finalProtocolo = document.getElementById('cProtocolo');
+				var day = ("0" + currentDate.getDate()).slice(-2);
+				var month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+				var today = (day)+"-"+(month)+"-"+currentDate.getFullYear();
+
+
+				var hour = ("0" + currentDate.getHours()).slice(-2);
+				var minute = ("0" + currentDate.getMinutes()).slice(-2);
+				var hora = hour + "h" + minute+"m";
+
+				var sFileName = today + "_" + hora;
+
+				finalREP = document.getElementById('cREP');
+				if (finalProtocolo.value) sFileName = finalProtocolo.value;
+				if (finalREP.value) sFileName = finalREP.value;
+
+
+				generate(arrayLaudo, flagTituloPara, sFileName);
+
+
+				// cria TXT
+				// Convert the text to BLOB.
+				//const textToBLOB = new Blob([data], {encoding:"UTF-8",type:"text/plain;charset=UTF-8"});
+				 // let newLink = document.createElement("a");
+				 // newLink.download = sFileName+".txt";
+				 //
+				 // if (window.webkitURL != null) {
+					//  newLink.href = window.webkitURL.createObjectURL(textToBLOB);
+				 // } -->
+				 // else { -->
+					//  newLink.href = window.URL.createObjectURL(textToBLOB);
+					//  newLink.style.display = "none";
+					//  document.body.appendChild(newLink);
+				 // }
+				 //
+				 // newLink.click();
+
+
+
+
+    		}
+			</script>
+
+
+
+
+
+
+			<!-- <fieldset>
+			indícios de furto
+
+
+escalada
+	recente
+	sujidades
+		calçado
+		pés
+		mãos
+		térreas
+	fragmentos
+		cimentícios
+		tijolo cerâmico
+
+arrombamento
+	recente
+	amolgamento
+		porta
+		janela
+		metal
+		madeira(mossa)
+		instrumento incerto
+		instrumento na forma de alavanca
+		instrumento na forma percussiva
+		instrumento de corte
+		força humana
+	fraturas
+		porta
+		janela
+		vidro
+		madeira(fissuras)
+		instrumento incerto
+		instrumento na forma de alavanca
+		força humana
+	atritamentos
+		uso de chave mixa
+		inserção de instrumento
+	remoção
+		telhas
+		forro
+		vidrilhos
+		folha de vidro
+		folha de porta
+		folha de janela
+		moldura de vedação
+
+desordem típica de busca
+	quartos
+	closet
+	sala
+	cozinha
+	banheiro
+	copa
+
+Situado
+	porção anterior
+	porção média
+	porção posterior
+
+	porção esquerda
+	porção central
+	porção direita
+
+extras
+	recente
+	cabo/fio seccionado
+	cabos/fios seccionados
+	item ausente
+	arraste de objeto pesado
+	marcas de rodas
+	forro
+	fiação subterrânea
+	fiação aérea
+	instrumento de corte
+
+ensejando o concurso de mais de uma pessoa
+				<legend>Via Pública:</legend>
+				<fieldset>
+					<legend>Topografia:</legend>
+					<input type="radio" name="tInclin" id="cAclive"/> 			<label for="cAclive">aclive</label>
+					<input type="radio" name="tInclin" id="cPlano" checked/><label for="cPlano">plano</label>
+					<input type="radio" name="tInclin" id="cDeclive"/>			<label for="cDeclive">declive</label>
+				</fieldset>
+				<fieldset>
+					<legend>Curvatura:</legend>
+					<input type="radio" name="tCurva" id="cCurvaEsq"/> 			<label for="cCurvaEsq">esquerda</label>
+					<input type="radio" name="tCurva" id="cReta" checked/>	<label for="cReta">reta</label>
+					<input type="radio" name="tCurva" id="cCurvaDir"/>			<label for="cCurvaDir">direita</label>
+				</fieldset>
+				<fieldset>
+					<legend>Leito:</legend>
+					<input type="radio" name="tPista" id="cPistaDupla" checked/> 	<label for="cPistaDupla">Pista Dupla</label>
+					<input type="radio" name="tPista" id="cPistaUnica"/>					<label for="cPistaUnica">Pista Única</label>
+					<input type="checkbox" name="tPistaMao" id="cPistaMao"/>  		<label for="cPistaMao">Mão Dupla</label>
+					<input type="radio" name="tFaixasRolagem" id="c1Faixa" checked/> 	<label for="c1Faixa">Uma Faixa</label>
+					<input type="radio" name="tFaixasRolagem" id="c2Faixa"/>					<label for="c2Faixa">Duas Faixa</label>
+					<input type="radio" name="tFaixasRolagem" id="c3Faixa"/> 	<label for="c3Faixa">Três Faixas</label>
+					<input type="radio" name="tFaixasRolagem" id="c4Faixa"/>					<label for="c4Faixa">Quatro Faixas</label>
+					<input type="checkbox" name="tAcostamento" id="cAcostamento"/>  	<label for="cAcostamento">Acostamento</label>
+					<input type="checkbox" name="tPasseioPub" id="cPasseioPub"/>  		<label for="cPasseioPub">Passeio Público</label>
+					<input type="checkbox" name="tGuardRail" id="cGuardRail"/>  		<label for="cGuardRail">Guard Rail</label>
+					<input type="checkbox" name="tIlhaCentral" id="cIlhaCentral"/>  		<label for="cIlhaCentral">Ilha Central</label>
+					<input type="checkbox" name="tMuretaDeConcreto" id="cMuretaDeConcreto"/>  		<label for="cMuretaDeConcreto">Mureta de Concreto</label>
+				</fieldset>
+				<fieldset>
+					<legend>Pavimentação:</legend>
+					<input type="radio" name="tPavi" id="cAsfalto" checked/> 	  <label for="cAsfalto">Asfalto</label>
+					<input type="radio" name="tPavi" id="cTerra"/>				 			<label for="cTerra">Terra</label>
+					<input type="radio" name="tPavi" id="cCimento"/>						<label for="cCimento">Cimento</label>
+
+					<input type="radio" name="tSeca" id="cSeca" checked/> 	  <label for="cSeca">Seca</label>
+					<input type="radio" name="tSeca" id="cUmid"/>				 			<label for="cUmid">Úmida</label>
+					<input type="radio" name="tSeca" id="cMolh"/>						<label for="cMolh">Molhada</label>
+
+					<input type="checkbox" name="tIlumi" id="cIlumi"/>  		<label for="CIlmui">Iluminação Pública</label>
+					<input type="checkbox" name="tIlumiAcesa" id="cIlumiAcesa"/>  		<label for="CIlmuiAcesa">Acionada</label>
+				</fieldset> -->
+
+
+
+	</form>
+</body>
+</html>
