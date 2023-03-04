@@ -1082,87 +1082,75 @@
 					<label><input type="checkbox" name="tFlagMaqJDA1InsHallow" id="cFlagMaqJDA1InsHallow"/>Totem de Internet</label>
 					<label><input type="checkbox" name="tFlagMaqJDA1InsMulti" id="cFlagMaqJDA1InsMulti"/>TOTEM BRASIL</label>
 					<label><input type="checkbox" name="tFlagMaqJDA1InsVideoG" id="cFlagMaqJDA1InsVideoG"/>VIDEO GAME</label>
-
 				</fieldSet>
-
-
-
 			</fieldset>
 
 			<input type="button" id="bt" value="Gerar Laudo"+sFileName onclick="saveFile()" />
-
 			<!-- <img id="imagemCabe" src="cabecalhoAme.png"> -->
 			<!-- <canvas id="canvas" src="cabecalhoAme.png"></canvas> -->
 			<script>
 
 			function generate(textoLaudo, flTitPara,sFileName) {
-
-			var arrParagraf = [];
-			for (var i=0; i< textoLaudo.length; i++){
-
-				var para = new docx.Paragraph({
-					alignment: docx.AlignmentType.JUSTIFIED,
-					children: [	new docx.TextRun({ text: textoLaudo[i], font: 'Spranq eco sans', size: 24, }), ],
-				});
-
-				var tituloTes = new docx.Paragraph({
-						alignment: docx.AlignmentType.LEFT,
-						spacing: { line: 276, before: 20 * 72 * 0.1, after: 20 * 72 * 0.05 },
-						children: [	new docx.TextRun({ text: textoLaudo[i], font: 'Spranq eco sans', size: 26, 	bold: true,}), ],
-				});
-
-				arrParagraf.push((flTitPara[i] ? tituloTes : para));
-
-			}
-
-
+				var arrParagraf = [];
+				for (var i=0; i< textoLaudo.length; i++){
+					var para = new docx.Paragraph({
+						alignment: docx.AlignmentType.JUSTIFIED,
+						children: [	new docx.TextRun({ text: textoLaudo[i], font: 'Spranq eco sans', size: 24, }), ],
+					});
+					var tituloTes = new docx.Paragraph({
+							alignment: docx.AlignmentType.LEFT,
+							spacing: { line: 276, before: 20 * 72 * 0.1, after: 20 * 72 * 0.05 },
+							children: [	new docx.TextRun({ text: textoLaudo[i], font: 'Spranq eco sans', size: 26, 	bold: true,}), ],
+					});
+					arrParagraf.push((flTitPara[i] ? tituloTes : para));
+				}
 				const doc1 = new docx.Document({
 					sections: [{
 							children:
 								arrParagraf
 					},],
 				});
-      	docx.Packer.toBlob(doc1).then((blob) => {
-        //console.log(blob);
-        	saveAs(blob, sFileName+".docx");
-          //console.log("Document created successfully");
-        });
+				docx.Packer.toBlob(doc1).then((blob) => {
+				//console.log(blob);
+					saveAs(blob, sFileName+".docx");
+				//console.log("Document created successfully");
+				});
 			}
 
 
+			//créditos para:
+			//+ Carlos R. L. Rodrigues
+			//@ http://jsfromhell.com/string/extenso [rev. #3]
 
-				//+ Carlos R. L. Rodrigues
-				//@ http://jsfromhell.com/string/extenso [rev. #3]
-				//foda, meu amigo. Se um dia ler isso, saiba que achei uma verdadeira obra de arte!!! - btw, mudei pra metros
-				String.prototype.extenso = function(c){
-					var ex = [
-						["zero", "um", "dois", "três", "quatro", "cinco", "seis", "sete", "oito", "nove", "dez", "onze", "doze", "treze", "quatorze", "quinze", "dezesseis", "dezessete", "dezoito", "dezenove"],
-						["dez", "vinte", "trinta", "quarenta", "cinqüenta", "sessenta", "setenta", "oitenta", "noventa"],
-						["cem", "cento", "duzentos", "trezentos", "quatrocentos", "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos"],
-						["mil", "milhão", "bilhão", "trilhão", "quadrilhão", "quintilhão", "sextilhão", "setilhão", "octilhão", "nonilhão", "decilhão", "undecilhão", "dodecilhão", "tredecilhão", "quatrodecilhão", "quindecilhão", "sedecilhão", "septendecilhão", "octencilhão", "nonencilhão"]
-					];
-					var a, n, v, i, n = this.replace(c ? /[^,\d]/g : /\D/g, "").split(","), e = " e ", $ = "metro", d = "centímetro", sl;
-					for(var f = n.length - 1, l, j = -1, r = [], s = [], t = ""; ++j <= f; s = []){
-						j && (n[j] = (("." + n[j]) * 1).toFixed(2).slice(2));
-						if(!(a = (v = n[j]).slice((l = v.length) % 3).match(/\d{3}/g), v = l % 3 ? [v.slice(0, l % 3)] : [], v = a ? v.concat(a) : v).length) continue;
-						for(a = -1, l = v.length; ++a < l; t = ""){
-							if(!(i = v[a] * 1)) continue;
-							i % 100 < 20 && (t += ex[0][i % 100]) ||
-							i % 100 + 1 && (t += ex[1][(i % 100 / 10 >> 0) - 1] + (i % 10 ? e + ex[0][i % 10] : ""));
-							s.push((i < 100 ? t : !(i % 100) ? ex[2][i == 100 ? 0 : i / 100 >> 0] : (ex[2][i / 100 >> 0] + e + t)) +
-							((t = l - a - 2) > -1 ? " " + (i > 1 && t > 0 ? ex[3][t].replace("ão", "ões") : ex[3][t]) : ""));
-						}
-						a = ((sl = s.length) > 1 ? (a = s.pop(), s.join(" ") + e + a) : s.join("") || ((!j && (n[j + 1] * 1 > 0) || r.length) ? "" : ex[0][0]));
-						a && r.push(a + (c ? (" " + (v.join("") * 1 > 1 ? j ? d + "s" : (/0{6,}$/.test(n[0]) ? "de " : "") + $.replace("o", "os") : j ? d : $)) : ""));
+			//foda, meu amigo. Se um dia ler isso, saiba que achei uma verdadeira obra de arte!!! - btw, mudei pra metros
+			String.prototype.extenso = function(c){
+				var ex = [
+					["zero", "um", "dois", "três", "quatro", "cinco", "seis", "sete", "oito", "nove", "dez", "onze", "doze", "treze", "quatorze", "quinze", "dezesseis", "dezessete", "dezoito", "dezenove"],
+					["dez", "vinte", "trinta", "quarenta", "cinqüenta", "sessenta", "setenta", "oitenta", "noventa"],
+					["cem", "cento", "duzentos", "trezentos", "quatrocentos", "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos"],
+					["mil", "milhão", "bilhão", "trilhão", "quadrilhão", "quintilhão", "sextilhão", "setilhão", "octilhão", "nonilhão", "decilhão", "undecilhão", "dodecilhão", "tredecilhão", "quatrodecilhão", "quindecilhão", "sedecilhão", "septendecilhão", "octencilhão", "nonencilhão"]
+				];
+				var a, n, v, i, n = this.replace(c ? /[^,\d]/g : /\D/g, "").split(","), e = " e ", $ = "metro", d = "centímetro", sl;
+				for(var f = n.length - 1, l, j = -1, r = [], s = [], t = ""; ++j <= f; s = []){
+					j && (n[j] = (("." + n[j]) * 1).toFixed(2).slice(2));
+					if(!(a = (v = n[j]).slice((l = v.length) % 3).match(/\d{3}/g), v = l % 3 ? [v.slice(0, l % 3)] : [], v = a ? v.concat(a) : v).length) continue;
+					for(a = -1, l = v.length; ++a < l; t = ""){
+						if(!(i = v[a] * 1)) continue;
+						i % 100 < 20 && (t += ex[0][i % 100]) ||
+						i % 100 + 1 && (t += ex[1][(i % 100 / 10 >> 0) - 1] + (i % 10 ? e + ex[0][i % 10] : ""));
+						s.push((i < 100 ? t : !(i % 100) ? ex[2][i == 100 ? 0 : i / 100 >> 0] : (ex[2][i / 100 >> 0] + e + t)) +
+						((t = l - a - 2) > -1 ? " " + (i > 1 && t > 0 ? ex[3][t].replace("ão", "ões") : ex[3][t]) : ""));
 					}
-					return r.join(e);
+					a = ((sl = s.length) > 1 ? (a = s.pop(), s.join(" ") + e + a) : s.join("") || ((!j && (n[j + 1] * 1 > 0) || r.length) ? "" : ex[0][0]));
+					a && r.push(a + (c ? (" " + (v.join("") * 1 > 1 ? j ? d + "s" : (/0{6,}$/.test(n[0]) ? "de " : "") + $.replace("o", "os") : j ? d : $)) : ""));
 				}
-
+				return r.join(e);
+			}
 
     		let saveFile = () => {
 
-					var arrayLaudo = [""];
-					var flagTituloPara = [false];
+				var arrayLaudo = [""];
+				var flagTituloPara = [false];
 
 				//naturezas
 				var checkboxesNatureza = document.getElementsByName('tNatureza');
