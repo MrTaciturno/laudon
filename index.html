@@ -178,8 +178,10 @@
 					document.getElementById('cProtSAEP').value = conteudoEmail.substring(posProtSAEP+19,posProtSAEP+30);
 
 					var vBoletimDelegacia = conteudoEmail.substring(posOrigem+8,posMSG);
-					document.getElementById('cBO').value = vBoletimDelegacia.substring(0,vBoletimDelegacia.search("2022")+4);
-					document.getElementById('cDelegacia').value = vBoletimDelegacia.substring(vBoletimDelegacia.search("2022")+6).trim();
+
+					
+					document.getElementById('cBO').value = vBoletimDelegacia.substring(0,vBoletimDelegacia.search("2023")+4);
+					document.getElementById('cDelegacia').value = vBoletimDelegacia.substring(vBoletimDelegacia.search("2023")+6).trim();
 					document.getElementById('cAutoridade').value = conteudoEmail.substring(posAutoridade+24,posEmailReq).trim();
 
 					document.getElementById('cNatInfo').innerHTML = "Natureza Informada: "+conteudoEmail.substring(posNaturezaInformada+24,posFlagrante);
@@ -1686,8 +1688,8 @@
 				let data =
 				'\t Em 30 de julho de 2022 no Núcleo de Perícias Criminalística de Americana, do Instituto de Criminalística'+
 				', da Superintendência da Polícia Técnico-Científica, da Secretaria de Segurança Pública do Estado de São Paulo'+
-				', em conformidade com o disposto no Decreto-Lei n.º 3.689/41, o Diretor deste instituto, '+
-				'Doutor Samuel Alves de Melo Neto designou o Perito Criminal '+document.getElementById('cPerito').value+' para proceder a este exame pericial'+
+				', em conformidade com o disposto no Decreto-Lei n.º 3.689/41, o Diretor deste instituto '+
+				'designou o Perito Criminal '+document.getElementById('cPerito').value+' para proceder a este exame pericial'+
 				', em atendimento à requisição da autoridade de polícia judiciária da '+ document.getElementById('cDelegacia').value + ', '
 				+document.getElementById('cAutoridade').value+ '.';
 
