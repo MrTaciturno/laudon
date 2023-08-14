@@ -1764,6 +1764,10 @@
 				arrayLaudo.push(data);
 				flagTituloPara[arrayLaudo.length-1]=false;
 
+				data = '';
+				arrayLaudo.push(data);
+				flagTituloPara[arrayLaudo.length-1]=false;
+
 				data = '	Este laudo foi elaborado em X (XX) páginas com cópia digital arquivada no Sistema Gestor de Documentos e Laudos da Superintendência da Polícia Técnico-Científica do Estado de São Paulo (Portaria SPTC 145/2012).';
 				arrayLaudo.push(data);
 				flagTituloPara[arrayLaudo.length-1]=false;
@@ -1782,19 +1786,19 @@
 				var hora = hour + "h" + minute+"m";
 
 //data e assinatura
-				data = '	Americana, '+day+' de '+month+' de '+currentDate.getFullYear();
+				data = '				Americana, '+day+' de '+month+' de '+currentDate.getFullYear();
 				arrayLaudo.push(data);
 				flagTituloPara[arrayLaudo.length-1]=false;
 
-				data = '-assinado digitalmente-';
+				data = '				    -assinado digitalmente-';
 				arrayLaudo.push(data);
 				flagTituloPara[arrayLaudo.length-1]=false;
 				
-				data = document.getElementById('cPerito').value;
+				data = '				        '+document.getElementById('cPerito').value;
 				arrayLaudo.push(data);
 				flagTituloPara[arrayLaudo.length-1]=false;
 
-				data = 'Perito Criminal';
+				data = '					    Perito Criminal';
 				arrayLaudo.push(data);
 				flagTituloPara[arrayLaudo.length-1]=false;
 
