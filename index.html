@@ -1094,22 +1094,34 @@
 
 			
 					
-			function generate(textoLaudo, flTitPara, formatacao, sFileName) {
+			function generate(textoLaudo, formatacao, sFileName) {
 				var arrParagraf = [];
 				for (var i=0; i< textoLaudo.length; i++){
-					var para = new docx.Paragraph({
-						//alignment: docx.AlignmentType.JUSTIFIED,
-						alignment: docx.AlignmentType.JUSTIFIED,
-						spacing: { line: 276, before: 20 * 72 * 0.1, after: 20 * 72 * 0.05 },
-							
-						children: [	new docx.TextRun({ text: textoLaudo[i], font: 'Arial', size: 24, }), ],
-					});
-					var tituloTes = new docx.Paragraph({
-							alignment: docx.AlignmentType.LEFT,
-							spacing: { line: 276, before: 20 * 72 * 0.1, after: 20 * 72 * 0.05 },
-							children: [	new docx.TextRun({ text: textoLaudo[i], font: 'Arial', size: 26, 	bold: true,}), ],
-					});
+					var alinhamentoDX = docx.AlignmentType.JUSTIFIED;
+					var linhaDX = 250;
+					var antesDX = 20 * 72 * 0.01;
+					var depoisDX = 20 * 72 * 0.01;
+					var tamanhoDX = 24;
+					var negritoDX = false;
 
+					switch(formatacao[i]){
+						case 1: //titulo
+							alinhamentoDX = docx.AlignmentType.LEFT;
+							linhaDX = 276;
+							antesDX = 20 * 72 * 0.1;
+							depoisDX = 20 * 72 * 0.05;
+							tamanhoDX = 26;
+							negritoDX = true;
+						break;
+						case 2: //assinatura
+							alinhamentoDX = docx.AlignmentType.CENTER;
+							linhaDX = 250;
+							antesDX = 20 * 72 * 0.01;
+							depoisDX = 20 * 72 * 0.01;
+							tamanhoDX = 24;
+							negritoDX = false;
+						break;
+					}
 					
 					var propositoGeral = new docx.Paragraph({
 						alignment: alinhamentoDX,
@@ -1128,7 +1140,8 @@
 						],
 					});
 
-					arrParagraf.push((flTitPara[i] ? tituloTes : para));
+
+					arrParagraf.push(propositoGeral);
 				}
 				const doc1 = new docx.Document({
 					sections: [{
@@ -1177,6 +1190,7 @@
 
 				var arrayLaudo = [""];
 				var flagTituloPara = [false];
+				var numFormatacao = [0];
 
 				//naturezas
 				var checkboxesNatureza = document.getElementsByName('tNatureza');
@@ -1712,7 +1726,7 @@
 				fVedacaoNao + ' vedado do passeio público'+fVedacao;
 				//incluir detalhes de local de jogo de azar
 
-				var mesExtenso = ["incerto", "janeiro", "fevereiro", "março", "abril", "maio","junho","julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+				var mesExtenso = ["janeiro", "fevereiro", "março", "abril", "maio","junho","julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
 				let data =	
 				'\t Em 30 de julho de 2022 no Núcleo de Perícias Criminalística de Americana, do Instituto de Criminalística'+
 				', da Superintendência da Polícia Técnico-Científica, da Secretaria de Segurança Pública do Estado de São Paulo'+
@@ -1727,7 +1741,8 @@
 				'1 - Disposições Preliminares';
 
 				arrayLaudo.push(data);
-				flagTituloPara[arrayLaudo.length-1]=true;
+				numFormatacao[arrayLaudo.length-1]=1;
+
 
 				data =
 				'\t Equipe pericial acionada para local de '+ (!finalNaturezas ? "natureza não informada, " : finalNaturezas) + 'endereço '+
@@ -1735,7 +1750,8 @@
 
 				if(data != ""){
 					arrayLaudo.push(data);
-					flagTituloPara[arrayLaudo.length-1]=false;
+					numFormatacao[arrayLaudo.length-1]=0;
+
 				}
 
 				data =
@@ -1743,52 +1759,67 @@
 
 				if(data != ""){
 					arrayLaudo.push(data);
-					flagTituloPara[arrayLaudo.length-1]=false;
+					numFormatacao[arrayLaudo.length-1]=0;
 				}
+				data =
+				(document.getElementById("cObjetivoDoExame").checked ? finalObjetivoExame : "");
+
+				if(data != ""){
+					arrayLaudo.push(data);
+					numFormatacao[arrayLaudo.length-1]=0;
+				}
+
+
 
 				data = finalDataeHoraFatos;
 				if(data != ""){
 					arrayLaudo.push(data);
-					flagTituloPara[arrayLaudo.length-1]=false;
+					numFormatacao[arrayLaudo.length-1]=0;
+
 				}
 
 				data = fPoliciamento;
 
 				arrayLaudo.push(data);
-				flagTituloPara[arrayLaudo.length-1]=false;
+				numFormatacao[arrayLaudo.length-1]=0;
 
 				data = (document.getElementById('cProtocolo').value ? "Protocolo: "+document.getElementById('cProtocolo').value+"." : "");
-				if(data != ""){ arrayLaudo.push(data); flagTituloPara[arrayLaudo.length-1]=false;}
+				if(data != ""){ arrayLaudo.push(data); numFormatacao[arrayLaudo.length-1]=0;}
 
 				data = (document.getElementById('cREP').value ? "Laudo Número: "+document.getElementById('cREP').value+"." : "");
-				if(data != ""){ arrayLaudo.push(data); flagTituloPara[arrayLaudo.length-1]=false;}
+				if(data != ""){ arrayLaudo.push(data); numFormatacao[arrayLaudo.length-1]=0;}
 
 				data = (document.getElementById('cBO').value ? "Boletim de Ocorrência: "+document.getElementById('cBO').value+"." : "Boletim de Ocorrência não informado, em descumprimento à Resolução SSP-26 de 17/04/2019.");
-				if(data != ""){ arrayLaudo.push(data); flagTituloPara[arrayLaudo.length-1]=false;}
+				if(data != ""){ arrayLaudo.push(data); numFormatacao[arrayLaudo.length-1]=0;}
 
 				data = '2 - Do Local';
 
 				arrayLaudo.push(data);
-				flagTituloPara[arrayLaudo.length-1]=true;
+				numFormatacao[arrayLaudo.length-1]=1;
+
 
 				data = fTextoLocal;
 				arrayLaudo.push(data);
-				flagTituloPara[arrayLaudo.length-1]=false;
+				numFormatacao[arrayLaudo.length-1]=0;
+
 
 				data = '3 - Dos Exames';
 
 				arrayLaudo.push(data);
-				flagTituloPara[arrayLaudo.length-1]=true;
+				numFormatacao[arrayLaudo.length-1]=1;
+
 
 				if (flagTemVF){
 					var nVF = matrizTodosVF.length;
 					arrayLaudo.push("	Quando dos exames esta equipe efetuou varredura pelo local. Despert"+ (nVF>1 ? "aram" : "ou") + " interesse pericial o"+ (nVF>1 ? "s" : "") + " seguinte"+ (nVF>1 ? "s" : "") + " ite"+ (nVF>1 ? "ns" : "m") + ":");
-					flagTituloPara[arrayLaudo.length-1]=false;
+					numFormatacao[arrayLaudo.length-1]=0;
+
 					
 					for (i=0;i<nVF;i++){
 						data = "	"+(i+1)+") "+matrizTodosVF[i];
 						arrayLaudo.push(data);
-						flagTituloPara[arrayLaudo.length-1]=false;
+						numFormatacao[arrayLaudo.length-1]=0;
+
 					}
 
 				}
@@ -1800,30 +1831,36 @@
 				data = '4 - Do Levantamento Fotográfico';
 
 				arrayLaudo.push(data);
-				flagTituloPara[arrayLaudo.length-1]=true;
+				numFormatacao[arrayLaudo.length-1]=1;
+
 //legenda
 
 //texto final
 
 				data = ' ';
 				arrayLaudo.push(data);
-				flagTituloPara[arrayLaudo.length-1]=false;
+				numFormatacao[arrayLaudo.length-1]=0;
 
-				data = '	Era o que havia a relatar.';
-				arrayLaudo.push(data);
-				flagTituloPara[arrayLaudo.length-1]=false;
 
-				data = ' ';
+				data = '\t Era o que havia a relatar.';
 				arrayLaudo.push(data);
-				flagTituloPara[arrayLaudo.length-1]=false;
+				numFormatacao[arrayLaudo.length-1]=0;
 
-				data = '	Este laudo foi elaborado em X (XX) páginas com cópia digital arquivada no Sistema Gestor de Documentos e Laudos da Superintendência da Polícia Técnico-Científica do Estado de São Paulo (Portaria SPTC 145/2012).';
-				arrayLaudo.push(data);
-				flagTituloPara[arrayLaudo.length-1]=false;
 
 				data = ' ';
 				arrayLaudo.push(data);
-				flagTituloPara[arrayLaudo.length-1]=false;
+				numFormatacao[arrayLaudo.length-1]=0;
+
+
+				data = '\t Este laudo foi elaborado em X (XX) páginas com cópia digital arquivada no Sistema Gestor de Documentos e Laudos da Superintendência da Polícia Técnico-Científica do Estado de São Paulo (Portaria SPTC 145/2012).';
+				arrayLaudo.push(data);
+				numFormatacao[arrayLaudo.length-1]=0;
+
+
+				data = ' ';
+				arrayLaudo.push(data);
+				numFormatacao[arrayLaudo.length-1]=0;
+
 
 				var currentDate= new Date();
 
@@ -1838,21 +1875,25 @@
 				var hora = hour + "h" + minute+"m";
 
 //data e assinatura
-				data = '				Americana, '+day+' de '+mesExtenso[currentDate.getMonth()]+' de '+currentDate.getFullYear();
+				data = 'Americana, '+day+' de '+mesExtenso[currentDate.getMonth()]+' de '+currentDate.getFullYear();
 				arrayLaudo.push(data);
-				flagTituloPara[arrayLaudo.length-1]=false;
+				numFormatacao[arrayLaudo.length-1]=2;
 
-				data = '				       -assinado digitalmente-';
+
+				data = '-assinado digitalmente-';
 				arrayLaudo.push(data);
-				flagTituloPara[arrayLaudo.length-1]=false;
+				numFormatacao[arrayLaudo.length-1]=2;
+
 				
-				data = '				        '+document.getElementById('cPerito').value;
+				data = document.getElementById('cPerito').value;
 				arrayLaudo.push(data);
-				flagTituloPara[arrayLaudo.length-1]=false;
+				numFormatacao[arrayLaudo.length-1]=2;
 
-				data = '					    Perito Criminal';
+
+				data = 'Perito Criminal';
 				arrayLaudo.push(data);
-				flagTituloPara[arrayLaudo.length-1]=false;
+				numFormatacao[arrayLaudo.length-1]=2;
+
 
 
 				var sFileName = today + "_" + hora;
@@ -1862,7 +1903,7 @@
 				if (finalREP.value) sFileName = finalREP.value;
 
 
-				generate(arrayLaudo, flagTituloPara, 1, sFileName);
+				generate(arrayLaudo, numFormatacao, sFileName);
 
 
 				// cria TXT
