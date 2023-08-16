@@ -1092,6 +1092,8 @@
 			<!-- <canvas id="canvas" src="cabecalhoAme.png"></canvas> -->
 			<script>
 
+			
+					
 			function generate(textoLaudo, flTitPara,sFileName) {
 				var arrParagraf = [];
 				for (var i=0; i< textoLaudo.length; i++){
@@ -1375,6 +1377,7 @@
 				var flagTemJogoDeAzar = false;
 
 				var fTodosVF = "";
+				var matrizTodosVF = [];
 
 				var gTodosVF = document.getElementsByName('tFlagTodosVestigios');
 				for (var i=0; i<gTodosVF.length; i++){
@@ -1667,12 +1670,15 @@
 						}
 						//compõe o texto
 						fTodosVF = fTodosVF + "\r\n\t"+ (i+1) + ") "+ VFE;
+						matrizTodosVF.push(VFE);
+
 					}
 
 				}
 				if (flagTemVF){
 					fTodosVF = "	Despertou interesse pericial:" + fTodosVF;
-					<!-- console.log(fTodosVF); -->
+					console.log(fTodosVF);
+					console.log(matrizTodosVF);
 				}
 
 
@@ -1684,8 +1690,8 @@
 				fVedacaoNao + ' vedado do passeio público'+fVedacao;
 				//incluir detalhes de local de jogo de azar
 
-
-				let data =
+				var mesExtenso = ["incerto", "janeiro", "fevereiro", "março", "abril", "maio","junho","julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+				let data =	
 				'\t Em 30 de julho de 2022 no Núcleo de Perícias Criminalística de Americana, do Instituto de Criminalística'+
 				', da Superintendência da Polícia Técnico-Científica, da Secretaria de Segurança Pública do Estado de São Paulo'+
 				', em conformidade com o disposto no Decreto-Lei n.º 3.689/41, o Diretor deste instituto '+
@@ -1752,10 +1758,27 @@
 				arrayLaudo.push(data);
 				flagTituloPara[arrayLaudo.length-1]=true;
 
-				data = (flagTemVF ? fTodosVF : "");
-				arrayLaudo.push(data);
-				flagTituloPara[arrayLaudo.length-1]=false;
+				if (flagTemVF){
+					var nVF = matrizTodosVF.length;
+					arrayLaudo.push("	Quando dos exames esta equipe efetuou varredura pelo local. Despert"+ (nVF>1 ? "aram" : "ou") + " interesse pericial o"+ (nVF>1 ? "s" : "") + " seguinte"+ (nVF>1 ? "s" : "") + " ite"+ (nVF>1 ? "ns" : "m") + ":");
+					flagTituloPara[arrayLaudo.length-1]=false;
+					
+					for (i=0;i<nVF;i++){
+						data = "	"+(i+1)+") "+matrizTodosVF[i];
+						arrayLaudo.push(data);
+						flagTituloPara[arrayLaudo.length-1]=false;
+					}
 
+				}
+
+				// data = (flagTemVF ? fTodosVF : "");
+				// arrayLaudo.push(data);
+				// flagTituloPara[arrayLaudo.length-1]=false;
+
+				data = '4 - Do Levantamento Fotográfico';
+
+				arrayLaudo.push(data);
+				flagTituloPara[arrayLaudo.length-1]=true;
 //legenda
 
 //texto final
@@ -1793,7 +1816,7 @@
 				var hora = hour + "h" + minute+"m";
 
 //data e assinatura
-				data = '				Americana, '+day+' de '+month+' de '+currentDate.getFullYear();
+				data = '				Americana, '+day+' de '+mesExtenso[currentDate.getMonth()]+' de '+currentDate.getFullYear();
 				arrayLaudo.push(data);
 				flagTituloPara[arrayLaudo.length-1]=false;
 
