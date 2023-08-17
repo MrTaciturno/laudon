@@ -23,11 +23,12 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!-- <link rel="manifest" href="/manifest.json"> -->
-	<link rel="icon" sizes="192x192" href="icon192x192.png">
+	<!-- <link rel="icon" sizes="192x192" href="icon192x192.png"> -->
+	<link rel="stylesheet" href="Estilo/style.css">
 	<title> Laudo Eletrônico Online </title>
 
 
-	<style>
+	<!-- <style>
     @font-face {
       font-family: 'Spranq eco sans';
       src: url(spranq_eco_sans_regular.ttf) format('truetype');
@@ -69,7 +70,7 @@
 		}
 
 
-	</style>
+	</style> -->
 
 </head>
 <body>
@@ -1931,156 +1932,8 @@
 
 				generate(arrayLaudo, numFormatacao, sFileName);
 
-
-				// cria TXT
-				// Convert the text to BLOB.
-				//const textToBLOB = new Blob([data], {encoding:"UTF-8",type:"text/plain;charset=UTF-8"});
-				 // let newLink = document.createElement("a");
-				 // newLink.download = sFileName+".txt";
-				 //
-				 // if (window.webkitURL != null) {
-					//  newLink.href = window.webkitURL.createObjectURL(textToBLOB);
-				 // } -->
-				 // else { -->
-					//  newLink.href = window.URL.createObjectURL(textToBLOB);
-					//  newLink.style.display = "none";
-					//  document.body.appendChild(newLink);
-				 // }
-				 //
-				 // newLink.click();
-
-
-
-
     		}
 			</script>
-
-
-
-
-
-
-			<!-- <fieldset>
-			indícios de furto
-
-
-escalada
-	recente
-	sujidades
-		calçado
-		pés
-		mãos
-		térreas
-	fragmentos
-		cimentícios
-		tijolo cerâmico
-
-arrombamento
-	recente
-	amolgamento
-		porta
-		janela
-		metal
-		madeira(mossa)
-		instrumento incerto
-		instrumento na forma de alavanca
-		instrumento na forma percussiva
-		instrumento de corte
-		força humana
-	fraturas
-		porta
-		janela
-		vidro
-		madeira(fissuras)
-		instrumento incerto
-		instrumento na forma de alavanca
-		força humana
-	atritamentos
-		uso de chave mixa
-		inserção de instrumento
-	remoção
-		telhas
-		forro
-		vidrilhos
-		folha de vidro
-		folha de porta
-		folha de janela
-		moldura de vedação
-
-desordem típica de busca
-	quartos
-	closet
-	sala
-	cozinha
-	banheiro
-	copa
-
-Situado
-	porção anterior
-	porção média
-	porção posterior
-
-	porção esquerda
-	porção central
-	porção direita
-
-extras
-	recente
-	cabo/fio seccionado
-	cabos/fios seccionados
-	item ausente
-	arraste de objeto pesado
-	marcas de rodas
-	forro
-	fiação subterrânea
-	fiação aérea
-	instrumento de corte
-
-ensejando o concurso de mais de uma pessoa
-				<legend>Via Pública:</legend>
-				<fieldset>
-					<legend>Topografia:</legend>
-					<input type="radio" name="tInclin" id="cAclive"/> 			<label for="cAclive">aclive</label>
-					<input type="radio" name="tInclin" id="cPlano" checked/><label for="cPlano">plano</label>
-					<input type="radio" name="tInclin" id="cDeclive"/>			<label for="cDeclive">declive</label>
-				</fieldset>
-				<fieldset>
-					<legend>Curvatura:</legend>
-					<input type="radio" name="tCurva" id="cCurvaEsq"/> 			<label for="cCurvaEsq">esquerda</label>
-					<input type="radio" name="tCurva" id="cReta" checked/>	<label for="cReta">reta</label>
-					<input type="radio" name="tCurva" id="cCurvaDir"/>			<label for="cCurvaDir">direita</label>
-				</fieldset>
-				<fieldset>
-					<legend>Leito:</legend>
-					<input type="radio" name="tPista" id="cPistaDupla" checked/> 	<label for="cPistaDupla">Pista Dupla</label>
-					<input type="radio" name="tPista" id="cPistaUnica"/>					<label for="cPistaUnica">Pista Única</label>
-					<input type="checkbox" name="tPistaMao" id="cPistaMao"/>  		<label for="cPistaMao">Mão Dupla</label>
-					<input type="radio" name="tFaixasRolagem" id="c1Faixa" checked/> 	<label for="c1Faixa">Uma Faixa</label>
-					<input type="radio" name="tFaixasRolagem" id="c2Faixa"/>					<label for="c2Faixa">Duas Faixa</label>
-					<input type="radio" name="tFaixasRolagem" id="c3Faixa"/> 	<label for="c3Faixa">Três Faixas</label>
-					<input type="radio" name="tFaixasRolagem" id="c4Faixa"/>					<label for="c4Faixa">Quatro Faixas</label>
-					<input type="checkbox" name="tAcostamento" id="cAcostamento"/>  	<label for="cAcostamento">Acostamento</label>
-					<input type="checkbox" name="tPasseioPub" id="cPasseioPub"/>  		<label for="cPasseioPub">Passeio Público</label>
-					<input type="checkbox" name="tGuardRail" id="cGuardRail"/>  		<label for="cGuardRail">Guard Rail</label>
-					<input type="checkbox" name="tIlhaCentral" id="cIlhaCentral"/>  		<label for="cIlhaCentral">Ilha Central</label>
-					<input type="checkbox" name="tMuretaDeConcreto" id="cMuretaDeConcreto"/>  		<label for="cMuretaDeConcreto">Mureta de Concreto</label>
-				</fieldset>
-				<fieldset>
-					<legend>Pavimentação:</legend>
-					<input type="radio" name="tPavi" id="cAsfalto" checked/> 	  <label for="cAsfalto">Asfalto</label>
-					<input type="radio" name="tPavi" id="cTerra"/>				 			<label for="cTerra">Terra</label>
-					<input type="radio" name="tPavi" id="cCimento"/>						<label for="cCimento">Cimento</label>
-
-					<input type="radio" name="tSeca" id="cSeca" checked/> 	  <label for="cSeca">Seca</label>
-					<input type="radio" name="tSeca" id="cUmid"/>				 			<label for="cUmid">Úmida</label>
-					<input type="radio" name="tSeca" id="cMolh"/>						<label for="cMolh">Molhada</label>
-
-					<input type="checkbox" name="tIlumi" id="cIlumi"/>  		<label for="CIlmui">Iluminação Pública</label>
-					<input type="checkbox" name="tIlumiAcesa" id="cIlumiAcesa"/>  		<label for="CIlmuiAcesa">Acionada</label>
-				</fieldset> -->
-
-
-
 	</form>
 </body>
 </html>
