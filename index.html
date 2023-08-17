@@ -109,6 +109,7 @@
 			<input type="text" name="tCampodeColagem" id="cCampodeColagem" size="30" maxlenght="1000" onpaste="fProcessaEmail()" placeholder="Cole o email aqui" />
 
 			<script>
+				
 				function handlePaste(e) {
 					var clipboardData, pastedData;
 
@@ -127,12 +128,13 @@
 
 				document.getElementById('cCampodeColagem').addEventListener('paste', handlePaste);
 
+				
 				function fProcessaEmail(){
 					var conteudoEmail = document.getElementById('cCampodeColagem').value;
 					document.getElementById('cCampodeColagem').value = "";
 					document.getElementById('cCampodeColagem').placeholder= "OK";
 
-					console.log(conteudoEmail);
+					//console.log(conteudoEmail);
 
 					var posProtSAEP = conteudoEmail.search   ("Laudo Pericial nº:");
 					var posProtSAEPret = conteudoEmail.search("Protocolo:");
@@ -180,8 +182,8 @@
 					var vBoletimDelegacia = conteudoEmail.substring(posOrigem+8,posMSG);
 
 					
-					document.getElementById('cBO').value = vBoletimDelegacia.substring(0,vBoletimDelegacia.search("2023")+4);
-					document.getElementById('cDelegacia').value = vBoletimDelegacia.substring(vBoletimDelegacia.search("2023")+6).trim();
+					document.getElementById('cBO').value = vBoletimDelegacia.substring(0,vBoletimDelegacia.search("/")+5);
+					document.getElementById('cDelegacia').value = vBoletimDelegacia.substring(vBoletimDelegacia.search("/")+6).trim();
 					document.getElementById('cAutoridade').value = conteudoEmail.substring(posAutoridade+24,posEmailReq).trim();
 
 					document.getElementById('cNatInfo').innerHTML = "Natureza Informada: "+conteudoEmail.substring(posNaturezaInformada+24,posFlagrante);
@@ -284,13 +286,13 @@
 			<input type="text" name="tPerito" id="cPerito" size="50" maxlenght="50" value="Leonardo Reis da Silva" placeholder="Perito" /> </br>
 
 			<label for="cProtocolo">Protocolo:</label>
-			<input type="text" name="tProtocolo" id="cProtocolo" size="9" maxlenght="9" placeholder="L00000-22" /> </br>
+			<input type="text" name="tProtocolo" id="cProtocolo" size="9" maxlenght="9" placeholder="L00000-23" /> </br>
 
 			<label for="cProtSAEP">Protocolo SAEP:</label>
-			<input type="text" name="tProtSAEP" id="cProtSAEP" size="9" maxlenght="9" placeholder="0000000/22" /> </br>
+			<input type="text" name="tProtSAEP" id="cProtSAEP" size="9" maxlenght="9" placeholder="0000000/23" /> </br>
 
 			<label for="cREP">REP:</label>
-			<input type="text" name="tREP" id="cREP" size="9" maxlenght="9" placeholder="000000/22" /> </br>
+			<input type="text" name="tREP" id="cREP" size="9" maxlenght="9" placeholder="000000/23" /> </br>
 
 			<label for="cBO">Origem:</label>
 			<input type="text" name="tBO" id="cBO" size="40" maxlenght="40" placeholder="Boletim" /> </br>
@@ -1267,12 +1269,25 @@
 					fPoliciamento = fPoliciamento + (fVTRPC.value ? "Viatura: "+fVTRPC.value+"." : "") + "";
 				}
 
+				var finalVitimaRepresentante = "";
+				if (document.getElementById("cFlagVitima").checked){
+					finalVitimaRepresentante = "No local se encontrava presente a pessoa de " +  document.getElementById("cNomeVit").value+" RG"+document.getElementById("cRGVit").value +" responsável pelo local.";
+				}
+
 				//Inclui objetivo do exame
 				var finalObjetivoExame ="";
 				if (document.getElementById("cObjetivoDoExame").checked){
-					finalObjetivoExame = "Objetivo do exame: " + document.getElementById("taObjExam").value;
+					finalObjetivoExame = "\t Objetivo do exame: " + document.getElementById("taObjExam").value;
 					finalObjetivoExame = finalObjetivoExame.trim();
 					finalObjetivoExame = finalObjetivoExame + (finalObjetivoExame.slice(-1)=="." ? "":".");
+				}
+
+				//Inclui Historico do exame
+				var finalHistorico ="";
+				if (document.getElementById("cHistorico").checked){
+					finalHistorico = "\t Histórico Informado: " + document.getElementById("taHist").value;
+					finalHistorico = finalHistorico.trim();
+					finalHistorico = finalHistorico + (finalHistorico.slice(-1)=="." ? "":".");
 				}
 
 
@@ -1282,7 +1297,7 @@
 				var finalDataeHoraFatos = "";
 				if(document.getElementById("cDataFatos").value){
 					finalDataFatos = document.getElementById("cDataFatos").value;
-					finalDataeHoraFatos = (document.getElementById("cDataFatos").value ? "\r\n"+"A data e horário informados dos eventos era: "
+					finalDataeHoraFatos = (document.getElementById("cDataFatos").value ? "\r\n"+"A data e horário informados dos eventos eram: "
 					+ finalDataFatos.slice(-2) + "/"+finalDataFatos.substring(5,7)+"/"+finalDataFatos.slice(0,4)
 					+ (document.getElementById("cHoraFatos").value ? " às "+document.getElementById("cHoraFatos").value+".": "")  : ".")
 				}
@@ -1704,19 +1719,13 @@
 						if(document.getElementById(montaFlagVF+"Extras").checked){
 							VFE = VFE + " Detalhe adicional: " + document.getElementById(montaFlagVF+"ExOutros").value;
 						}
-						//compõe o texto
-						fTodosVF = fTodosVF + "\r\n\t"+ (i+1) + ") "+ VFE;
+
+
 						matrizTodosVF.push(VFE);
 
 					}
 
 				}
-				if (flagTemVF){
-					fTodosVF = "	Despertou interesse pericial:" + fTodosVF;
-					console.log(fTodosVF);
-					console.log(matrizTodosVF);
-				}
-
 
 				fTodasMaquinas = "";
 
@@ -1728,7 +1737,7 @@
 
 				var mesExtenso = ["janeiro", "fevereiro", "março", "abril", "maio","junho","julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
 				let data =	
-				'\t Em 30 de julho de 2022 no Núcleo de Perícias Criminalística de Americana, do Instituto de Criminalística'+
+				'\tEm 30 de julho de 2022 no Núcleo de Perícias Criminalística de Americana, do Instituto de Criminalística'+
 				', da Superintendência da Polícia Técnico-Científica, da Secretaria de Segurança Pública do Estado de São Paulo'+
 				', em conformidade com o disposto no Decreto-Lei n.º 3.689/41, o Diretor deste instituto '+
 				'designou o Perito Criminal '+document.getElementById('cPerito').value+' para proceder a este exame pericial'+
@@ -1742,10 +1751,27 @@
 
 				arrayLaudo.push(data);
 				numFormatacao[arrayLaudo.length-1]=1;
+				
+				data = (document.getElementById('cProtocolo').value ? "Protocolo: "+document.getElementById('cProtocolo').value+"." : "");
+				if(data != ""){ arrayLaudo.push(data); numFormatacao[arrayLaudo.length-1]=1;}
+
+				data = (document.getElementById('cREP').value ? "Laudo Número: "+document.getElementById('cREP').value+"." : "");
+				if(data != ""){ arrayLaudo.push(data); numFormatacao[arrayLaudo.length-1]=1;}
+
+				// data = (document.getElementById('cBO').value ? "Boletim de Ocorrência: "+document.getElementById('cBO').value.toUpperCase()+"." : "Boletim de Ocorrência não informado, em descumprimento à Resolução SSP-26 de 17/04/2019.");
+				// if(data != ""){ arrayLaudo.push(data); numFormatacao[arrayLaudo.length-1]=1;}
+
+				if (document.getElementById('cBO').value){
+					data = "Boletim de Ocorrência: "+document.getElementById('cBO').value.toUpperCase()+".";
+					arrayLaudo.push(data); numFormatacao[arrayLaudo.length-1]=1;
+				}else{
+					data = "\tBoletim de Ocorrência não informado, em descumprimento à Resolução SSP-26 de 17/04/2019.";
+					arrayLaudo.push(data); numFormatacao[arrayLaudo.length-1]=0;
+				}
 
 
 				data =
-				'\t Equipe pericial acionada para local de '+ (!finalNaturezas ? "natureza não informada, " : finalNaturezas) + 'endereço '+
+				'\tEquipe pericial acionada para local de '+ (!finalNaturezas ? "natureza não informada, " : finalNaturezas) + 'endereço '+
 				(!finalRua.value ? "não informado" : finalRua.value)+ ", " + fCidade + '/SP.';
 
 				if(data != ""){
@@ -1761,8 +1787,10 @@
 					arrayLaudo.push(data);
 					numFormatacao[arrayLaudo.length-1]=0;
 				}
+
+				
 				data =
-				(document.getElementById("cObjetivoDoExame").checked ? finalObjetivoExame : "");
+				(document.getElementById("cHistorico").checked ? finalHistorico : "");
 
 				if(data != ""){
 					arrayLaudo.push(data);
@@ -1783,14 +1811,10 @@
 				arrayLaudo.push(data);
 				numFormatacao[arrayLaudo.length-1]=0;
 
-				data = (document.getElementById('cProtocolo').value ? "Protocolo: "+document.getElementById('cProtocolo').value+"." : "");
-				if(data != ""){ arrayLaudo.push(data); numFormatacao[arrayLaudo.length-1]=0;}
+				data = finalVitimaRepresentante;
+				arrayLaudo.push(data);
+				numFormatacao[arrayLaudo.length-1]=0;
 
-				data = (document.getElementById('cREP').value ? "Laudo Número: "+document.getElementById('cREP').value+"." : "");
-				if(data != ""){ arrayLaudo.push(data); numFormatacao[arrayLaudo.length-1]=0;}
-
-				data = (document.getElementById('cBO').value ? "Boletim de Ocorrência: "+document.getElementById('cBO').value+"." : "Boletim de Ocorrência não informado, em descumprimento à Resolução SSP-26 de 17/04/2019.");
-				if(data != ""){ arrayLaudo.push(data); numFormatacao[arrayLaudo.length-1]=0;}
 
 				data = '2 - Do Local';
 
@@ -1862,9 +1886,11 @@
 				numFormatacao[arrayLaudo.length-1]=0;
 
 
-				var currentDate= new Date();
 
 				var finalProtocolo = document.getElementById('cProtocolo');
+				var currentDate= new Date();
+
+
 				var day = ("0" + currentDate.getDate()).slice(-2);
 				var month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
 				var today = (day)+"-"+(month)+"-"+currentDate.getFullYear();
