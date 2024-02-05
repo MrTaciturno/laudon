@@ -75,13 +75,13 @@
 			<input type="text" name="tPerito" id="cPerito" size="50" maxlenght="50" value="Leonardo Reis da Silva" placeholder="Perito" /> </br>
 
 			<label for="cProtocolo">Protocolo:</label>
-			<input type="text" name="tProtocolo" id="cProtocolo" size="9" maxlenght="9" placeholder="L00000-23" /> </br>
+			<input type="text" name="tProtocolo" id="cProtocolo" size="9" maxlenght="9" placeholder="L00000-24" /> </br>
 
 			<label for="cProtSAEP">Protocolo SAEP:</label>
-			<input type="text" name="tProtSAEP" id="cProtSAEP" size="9" maxlenght="9" placeholder="0000000/23" /> </br>
+			<input type="text" name="tProtSAEP" id="cProtSAEP" size="9" maxlenght="9" placeholder="0000000/24" /> </br>
 
 			<label for="cREP">REP:</label>
-			<input type="text" name="tREP" id="cREP" size="9" maxlenght="9" placeholder="000000/23" /> </br>
+			<input type="text" name="tREP" id="cREP" size="9" maxlenght="9" placeholder="000000/24" /> </br>
 
 			<label for="cBO">Origem:</label>
 			<input type="text" name="tBO" id="cBO" size="40" maxlenght="40" placeholder="Boletim" /> </br>
@@ -90,7 +90,7 @@
 			<input type="text" name="tDelegacia" id="cDelegacia" size="40" maxlenght="40" placeholder="Delegacia" /> </br>
 
 			<label for="cAutoridade">Autoridade:</label>
-			<input type="text" name="tAutoridade" id="cAutoridade" size="40" maxlenght="40" placeholder="Autoridade" /> </br>
+			<input type="text" name="tAutoridade" id="cAutoridade" size="80" maxlenght="80" placeholder="Autoridade" /> </br>
 
 		</fieldset>
 
@@ -831,8 +831,15 @@
 			<!-- <img id="imagemCabe" src="cabecalhoAme.png"> -->
 			<!-- <canvas id="canvas" src="cabecalhoAme.png"></canvas> -->
 			<script>
+			var currentDate= new Date();
+			var day = ("0" + currentDate.getDate()).slice(-2);
+			var month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+			var today = (day)+"-"+(month)+"-"+currentDate.getFullYear();
 
-			
+			var hour = ("0" + currentDate.getHours()).slice(-2);
+			var minute = ("0" + currentDate.getMinutes()).slice(-2);
+			var hora = hour + "h" + minute+"m";
+
 					
 			function generate(textoLaudo, formatacao, sFileName) {
 				var arrParagraf = [];
@@ -1519,29 +1526,30 @@
 
 				data =
 				'\tEquipe pericial acionada para local de '+ (!finalNaturezas ? "natureza não informada, " : finalNaturezas) + 'endereço '+
-				(!finalRua.value ? "não informado" : finalRua.value)+ ", " + fCidade + '/SP.';
+				(!finalRua.value ? "não informado" : finalRua.value)+ ", " + fCidade + '/SP. \r\n';
+				arrayLaudo.push(data);
+				numFormatacao[arrayLaudo.length-1]=0;
 
-				if(data != ""){
-					arrayLaudo.push(data);
-					numFormatacao[arrayLaudo.length-1]=0;
-
-				}
+				data = ""; arrayLaudo.push(data); numFormatacao[arrayLaudo.length-1]=0; //pula linha
+				
 
 				data =
-				(document.getElementById("cObjetivoDoExame").checked ? finalObjetivoExame : "");
+				(document.getElementById("cObjetivoDoExame").checked ? "\t"+finalObjetivoExame : "");
 
 				if(data != ""){
 					arrayLaudo.push(data);
 					numFormatacao[arrayLaudo.length-1]=0;
+					data = ""; arrayLaudo.push(data); numFormatacao[arrayLaudo.length-1]=0; //pula linha
 				}
 
 				
 				data =
-				(document.getElementById("cHistorico").checked ? finalHistorico : "");
+				(document.getElementById("cHistorico").checked ? "\t"+finalHistorico : "");
 
 				if(data != ""){
 					arrayLaudo.push(data);
 					numFormatacao[arrayLaudo.length-1]=0;
+					data = ""; arrayLaudo.push(data); numFormatacao[arrayLaudo.length-1]=0; //pula linha
 				}
 
 
@@ -1550,7 +1558,7 @@
 				if(data != ""){
 					arrayLaudo.push(data);
 					numFormatacao[arrayLaudo.length-1]=0;
-
+					data = ""; arrayLaudo.push(data); numFormatacao[arrayLaudo.length-1]=0; //pula linha
 				}
 
 				data = fPoliciamento;
@@ -1608,7 +1616,7 @@
 
 //texto final
 
-				data = ' ';
+				data = "";
 				arrayLaudo.push(data);
 				numFormatacao[arrayLaudo.length-1]=0;
 
@@ -1627,16 +1635,13 @@
 				arrayLaudo.push(data);
 				numFormatacao[arrayLaudo.length-1]=0;
 
-
 				data = ' ';
 				arrayLaudo.push(data);
 				numFormatacao[arrayLaudo.length-1]=0;
 
-
-
 				var finalProtocolo = document.getElementById('cProtocolo');
-				var currentDate= new Date();
 
+/* 				var currentDate= new Date();
 
 				var day = ("0" + currentDate.getDate()).slice(-2);
 				var month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
@@ -1646,7 +1651,7 @@
 				var hour = ("0" + currentDate.getHours()).slice(-2);
 				var minute = ("0" + currentDate.getMinutes()).slice(-2);
 				var hora = hour + "h" + minute+"m";
-
+ */
 //data e assinatura
 				data = 'Americana, '+day+' de '+mesExtenso[currentDate.getMonth()]+' de '+currentDate.getFullYear();
 				arrayLaudo.push(data);
