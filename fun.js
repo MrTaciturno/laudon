@@ -22,20 +22,35 @@ function fProcessaEmail(){
     document.getElementById('cCampodeColagem').value = "";
     document.getElementById('cCampodeColagem').placeholder= "OK";
 
-    //console.log(conteudoEmail);
+    console.log(conteudoEmail);
 
-    var posProtSAEP = conteudoEmail.search   ("Laudo Pericial nº:");
-    var posProtSAEPret = conteudoEmail.search("Protocolo:");
-
-    posProtSAEP = (posProtSAEPret!=-1 ? posProtSAEPret-8 : posProtSAEP);
-
-    var posOrigem = conteudoEmail.search("Origem:");
+    var posProtSAEP = conteudoEmail.search   ("Local LiberadoNº");
+    var posNumLaudo = conteudoEmail.search   ("Laudo:");
+    
+    var posTipoOrigem = conteudoEmail.search("Tipo de Origem:");
+    var posCidadeOrigem = conteudoEmail.search("Cidade de Origem:");
+    
+    var posOrigem = conteudoEmail.search("Número do BO:");
+    var posOrgaoCircunscricao = conteudoEmail.search("Órgão Circunscrição:");
+    var posDPRequisitante = conteudoEmail.search("DP Requisitante:");
+        
     var posMSG = conteudoEmail.search("MSG n°:");
-    var posAutoridade = conteudoEmail.search("Autoridade Requisitante:");
-    var posEmailReq = conteudoEmail.search("Email Requisitante:");
-    var posNaturezaInformada = conteudoEmail.search("Natureza da Ocorrência:");
-    var posFlagrante = conteudoEmail.search("Flagrante:");
-    var posDataFatoInfo = conteudoEmail.search("Data Fato:");
+    var posAutoridade = conteudoEmail.search("Nome do Requisitante:");
+    
+    var posEndereco = conteudoEmail.search("Endereço:");
+
+    //var posEmailReq = conteudoEmail.search("Email Requisitante:");
+
+    var posNaturezaExame = conteudoEmail.search("Natureza:");
+    var posNaturezaCrime = conteudoEmail.search("Natureza Criminal da Ocorrência:");
+    
+    //var posDataSolicitacao = conteudoEmail.search("Solicitação:");
+    var posDataFatoInfo = conteudoEmail.search("Data/Hora do Fato:");
+    var posDataAcionamento = conteudoEmail.search("Protocolo Aberto");
+    
+    var posDataExame = conteudoEmail.search("Protocolo em Atendimento");
+
+    
     var posLocalFatoInfo = conteudoEmail.search("Local do Fato:");
     var posLocalExameInfo = conteudoEmail.search("Local do Exame:");
     var posAcusado = conteudoEmail.search("Acusado");
@@ -43,9 +58,15 @@ function fProcessaEmail(){
     var posVitimaFatal = conteudoEmail.search("Vitíma Fatal:");
     var posPreservaInfo = conteudoEmail.search("Preservado:");
     var posPrioridade = conteudoEmail.search("Prioridade:");
-    var posObjetivoExame = conteudoEmail.search("Objetivo do Exame:");
+    
     var posHistoricoInfo = conteudoEmail.search("Histórico:");
-    var posVeiculoInfo = conteudoEmail.search("Veículo");
+    //var posObjetivoExame = conteudoEmail.search("Quesitos:");
+
+    var posQuesitos = conteudoEmail.search("Quesitos:");
+    var posObs = conteudoEmail.search("Observações/Mensagem na Íntegra:");
+    var posPessoasEnvolvidas = conteudoEmail.search("Pessoas Envolvidas:");
+
+    //var posVeiculoInfo = conteudoEmail.search("Veículo");
 
 
     document.getElementById("cNomeVit").value = conteudoEmail.substring(posVitimaInfo+10,posVitimaFatal).trim();
@@ -55,38 +76,57 @@ function fProcessaEmail(){
         document.getElementById("usarPreserInformada").hidden = false;
     }
 
-    var endFato = conteudoEmail.substring(posLocalFatoInfo+14,posLocalExameInfo);
-    var endExame = conteudoEmail.substring(posLocalExameInfo+15,posAcusado);
-
-    document.getElementById("taObjExam").value = conteudoEmail.substring(posObjetivoExame+19,posHistoricoInfo);
-    document.getElementById("taHist").value = conteudoEmail.substring(posHistoricoInfo+10,posVeiculoInfo).trim();
-
-    if (endExame == " 	"){
-        endExame = endFato;
-    }
-
-    document.getElementById('cProtSAEP').value = conteudoEmail.substring(posProtSAEP+19,posProtSAEP+30);
-
-    var vBoletimDelegacia = conteudoEmail.substring(posOrigem+8,posMSG);
-
     
-    document.getElementById('cBO').value = vBoletimDelegacia.substring(0,vBoletimDelegacia.search("/")+5);
-    document.getElementById('cDelegacia').value = vBoletimDelegacia.substring(vBoletimDelegacia.search("/")+6).trim();
-    document.getElementById('cAutoridade').value = conteudoEmail.substring(posAutoridade+24,posEmailReq).trim();
+    document.getElementById("taObjExam").value = conteudoEmail.substring(posQuesitos,posPessoasEnvolvidas);
 
-    document.getElementById('cNatInfo').innerHTML = "Natureza Informada: "+conteudoEmail.substring(posNaturezaInformada+24,posFlagrante);
+    document.getElementById("taHist").value = conteudoEmail.substring(posHistoricoInfo+10,posQuesitos);
+
+//    var endFato = conteudoEmail.substring(posLocalFatoInfo+14,posLocalExameInfo);
+//    var endExame = conteudoEmail.substring(posLocalExameInfo+15,posAcusado);
+//    if (endExame == " 	"){
+//      endExame = endFato;
+//    }
+//   document.getElementById('cRua').value = endExame.trim();
+
+
+    document.getElementById("cRua").value = conteudoEmail.substring(posEndereco+9,posDataFatoInfo);
+    
+    document.getElementById('cProtSAEP').value = conteudoEmail.substring(posProtSAEP+17,posNumLaudo-3);
+    tempREP = conteudoEmail.substring(posNumLaudo+6).search("/");
+    document.getElementById('cREP').value = conteudoEmail.substring(posNumLaudo+7,posNumLaudo+6+tempREP+5);
+
+    document.getElementById('cBO').value = conteudoEmail.substring(posTipoOrigem+16,posCidadeOrigem-3) + conteudoEmail.substring(posOrigem+12,posOrgaoCircunscricao-3) + " - "+conteudoEmail.substring(posDPRequisitante+17,posAutoridade-3);
+    
+    document.getElementById('cDelegacia').value = conteudoEmail.substring(posOrgaoCircunscricao+21,posDPRequisitante-3)
+    
+    document.getElementById('cAutoridade').value = conteudoEmail.substring(posAutoridade+22,posEndereco);
+  
+    document.getElementById('cNatInfo').innerHTML = "Natureza Informada: "+conteudoEmail.substring(posNaturezaExame+10,posNaturezaCrime);
 
     if ((conteudoEmail.search("furto") != -1) ||(conteudoEmail.search("Furto") != -1)||(conteudoEmail.search("FURTO") != -1)){
         document.getElementById('cNatuFurt').checked = true;
     }
 
-    var vDatinha = conteudoEmail.substring(posDataFatoInfo+11,posDataFatoInfo+21)
-    var montaDataFato = vDatinha.substring(6,10)+"-"+vDatinha.substring(3,5)+"-"+vDatinha.substring(0,2);
 
-    document.getElementById('cDataFatos').value = montaDataFato;
-    document.getElementById('cHoraFatos').value = conteudoEmail.substring(posDataFatoInfo+22,posDataFatoInfo+27);
+    //datas posDataAcionamento
+    var vDatinha = conteudoEmail.substring(posDataFatoInfo+19,posDataFatoInfo+29);
+    var montaData = vDatinha.substring(6,10)+"-"+vDatinha.substring(3,5)+"-"+vDatinha.substring(0,2);
+    document.getElementById('cDataFatos').value = montaData;
+    document.getElementById('cHoraFatos').value = conteudoEmail.substring(posDataFatoInfo+30,posDataFatoInfo+35);
+    
+    var vDatinha = conteudoEmail.substring(posDataAcionamento-22,posDataAcionamento-12);
+    montaData = vDatinha.substring(6,10)+"-"+vDatinha.substring(3,5)+"-"+vDatinha.substring(0,2);
+    document.getElementById('cDataAciona').value = montaData;
+    document.getElementById('cHoraAciona').value = conteudoEmail.substring(posDataAcionamento-11,posDataAcionamento-6);
 
-    document.getElementById('cRua').value = endExame.trim();
+    var vDatinha = conteudoEmail.substring(posDataExame-22,posDataExame-12);
+    montaData = vDatinha.substring(6,10)+"-"+vDatinha.substring(3,5)+"-"+vDatinha.substring(0,2);
+    document.getElementById('cDataExame').value = montaData;
+    //console.log("DATA:" + conteudoEmail.substring(posDataExame-11,posDataExame-6));
+    document.getElementById('cHoraExame').value = conteudoEmail.substring(posDataExame-11,posDataExame-6);
+
+
+   
 
     var probCidade =  conteudoEmail.substring(posOrigem+8,posMSG);
 

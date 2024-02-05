@@ -784,7 +784,7 @@
 					<input type="text" name="tFlagVest3ExOutros" id="cFlagVest3ExOutros" size="30" maxlenght="30" placeholder="Outros" /> </br>
 				</fieldset>
 			</fieldset>
-			<p><label id="cLabelMaqJDA1"><input type="checkbox" name="tFlagTodasMaqJDA"  id="cFlagMaqJDA1"
+<!-- 			<p><label id="cLabelMaqJDA1"><input type="checkbox" name="tFlagTodasMaqJDA"  id="cFlagMaqJDA1"
 				onclick="dEsconde('cFlagMaqJDA1','fieldMaqJDA1')"/>
 				Tipo de Máquina 1</label></p>
 
@@ -825,7 +825,7 @@
 					<label><input type="checkbox" name="tFlagMaqJDA1InsMulti" id="cFlagMaqJDA1InsMulti"/>TOTEM BRASIL</label>
 					<label><input type="checkbox" name="tFlagMaqJDA1InsVideoG" id="cFlagMaqJDA1InsVideoG"/>VIDEO GAME</label>
 				</fieldSet>
-			</fieldset>
+			</fieldset> -->
 
 			<input type="button" id="bt" value="Gerar Laudo"+sFileName onclick="saveFile()" />
 			<!-- <img id="imagemCabe" src="cabecalhoAme.png"> -->
@@ -1474,8 +1474,17 @@
 				//incluir detalhes de local de jogo de azar
 
 				var mesExtenso = ["janeiro", "fevereiro", "março", "abril", "maio","junho","julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+
+				var finalDataAcionamento = "";
+				if(document.getElementById("cDataAciona").value){
+					finalDataAcionamento = document.getElementById("cDataAciona").value;
+
+				}
+
+
+
 				let data =	
-				'\tEm 30 de julho de 2022 no Núcleo de Perícias Criminalística de Americana, do Instituto de Criminalística'+
+				'\tEm '+ finalDataAcionamento.slice(-2) + " de "+mesExtenso[finalDataAcionamento.substring(5,7)-1]+" de "+finalDataAcionamento.slice(0,4) +' no Núcleo de Perícias Criminalística de Americana, do Instituto de Criminalística'+
 				', da Superintendência da Polícia Técnico-Científica, da Secretaria de Segurança Pública do Estado de São Paulo'+
 				', em conformidade com o disposto no Decreto-Lei n.º 3.689/41, o Diretor deste instituto '+
 				'designou o Perito Criminal '+document.getElementById('cPerito').value+' para proceder a este exame pericial'+
